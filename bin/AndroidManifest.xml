@@ -26,7 +26,7 @@
         </activity>
         <activity
             android:name=".DrawActivity"
-            android:label="@string/title_activity_draw" >
+            android:label="@string/title_activity_draw" 
             android:screenOrientation="portrait" >
         </activity>
         <activity

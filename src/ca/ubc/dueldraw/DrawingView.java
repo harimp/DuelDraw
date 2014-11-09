@@ -1,101 +1,159 @@
 package ca.ubc.dueldraw;
 
-import android.view.View;
 import android.content.Context;
-import android.util.AttributeSet;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 public class DrawingView extends View {
-	//drawing path
-	private Path drawPath;
-	//drawing and canvas paint
-	private Paint drawPaint, canvasPaint;
-	//initial color
-	private int paintColor = 0xFF660000;
-	//canvas
-	private Canvas drawCanvas;
-	//canvas bitmap
-	private Bitmap canvasBitmap;
-	
-	private boolean erase=false;
-	
-	public DrawingView(Context context, AttributeSet attrs){
-	    super(context, attrs);
-	    setupDrawing();
+	private int numColumns, numRows;
+	private int cellWidth, cellHeight;
+	private Paint blackPaint = new Paint();
+	private Paint whitePaint = new Paint();
+	private boolean[][] cellChecked;
+	private boolean isErase;
+	private boolean canDraw;
+
+	public DrawingView(Context context) {
+		this(context, null);
 	}
-	
-	private void setupDrawing(){
-		//get drawing area setup for interaction    
-		
-		drawPath = new Path();
-		drawPaint = new Paint();
-		
-		drawPaint.setColor(paintColor);
-		
-		drawPaint.setAntiAlias(true);
-		drawPaint.setStrokeWidth(40);
-		drawPaint.setStyle(Paint.Style.STROKE);
-		drawPaint.setStrokeJoin(Paint.Join.ROUND);
-		drawPaint.setStrokeCap(Paint.Cap.ROUND);
-		
-		canvasPaint = new Paint(Paint.DITHER_FLAG);
+
+	public DrawingView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		blackPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		whitePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		whitePaint.setColor(Color.WHITE);
 	}
-	
+
+	public void setNumColumns(int numColumns) {
+		this.numColumns = numColumns;
+		calculateDimensions();
+	}
+
+	public int getNumColumns() {
+		return numColumns;
+	}
+
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
+		calculateDimensions();
+	}
+
+	public int getNumRows() {
+		return numRows;
+	}
+
+	public void setErase(boolean bool) {
+		isErase = bool;
+	}
+
+	public void startDrawing() {
+		canDraw = true;
+	}
+
+	public void stopDrawing() {
+		canDraw = false;
+	}
+
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-	//view given size
 		super.onSizeChanged(w, h, oldw, oldh);
-		canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-		drawCanvas = new Canvas(canvasBitmap);
+		calculateDimensions();
 	}
-	
+
+	private void calculateDimensions() {
+		if (numColumns == 0 || numRows == 0)
+			return;
+
+		cellWidth = getWidth() / numColumns;
+		cellHeight = getHeight() / numRows;
+
+		cellChecked = new boolean[numColumns][numRows];
+
+		invalidate();
+	}
+
 	@Override
+	/*
+	 * Draws the canvas when it needs to be updated. TODO: Optimize refresh
+	 * without going through each cell in the grid
+	 */
 	protected void onDraw(Canvas canvas) {
-	//draw view
-		canvas.drawBitmap(canvasBitmap, 0, 0, canvasPaint);
-		canvas.drawPath(drawPath, drawPaint);
+		super.onDraw(canvas);
+
+		canvas.drawColor(Color.WHITE);
+
+		if (numColumns == 0 || numRows == 0)
+			return;
+
+		int width = getWidth();
+		int height = getHeight();
+
+		for (int i = 0; i < numColumns; i++) {
+			for (int j = 0; j < numRows; j++) {
+				if (cellChecked[i][j]) {
+					canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1)
+							* cellWidth, (j + 1) * cellHeight, blackPaint);
+				} else {
+					canvas.drawRect(i * cellWidth, j * cellHeight, (i + 1)
+							* cellWidth, (j + 1) * cellHeight, whitePaint);
+				}
+			}
+		}
+
+		// Draw the Grid lines to the canvas
+		for (int i = 1; i < numColumns; i++) {
+			canvas.drawLine(i * cellWidth, 0, i * cellWidth, height, blackPaint);
+		}
+
+		for (int i = 1; i < numRows; i++) {
+			canvas.drawLine(0, i * cellHeight, width, i * cellHeight,
+					blackPaint);
+		}
+
 	}
-	
+
 	@Override
+	/* Maps touch events to cells in the grid to be erased/drawn */
 	public boolean onTouchEvent(MotionEvent event) {
-	//detect user touch     
-		float touchX = event.getX();
-		float touchY = event.getY();
-		
+
+		if (!canDraw) {
+			return true; // don't do anything if drawing is not enabled
+		}
+
+		// Get touch event coordinates
+		int column = (int) (event.getX() / cellWidth);
+		int row = (int) (event.getY() / cellHeight);
+
+		Log.i("X", Integer.toString(column));
+		Log.i("Y", Integer.toString(row));
+
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
-		    drawPath.moveTo(touchX, touchY);
-		    break;
+			// drawPath.moveTo(touchX, touchY);
+			break;
 		case MotionEvent.ACTION_MOVE:
-		    drawPath.lineTo(touchX, touchY);
-		    break;
+			// drawPath.lineTo(touchX, touchY);
+			break;
 		case MotionEvent.ACTION_UP:
-		    drawCanvas.drawPath(drawPath, drawPaint);
-		    drawPath.reset();
-		    break;
+			// drawCanvas.drawPath(drawPath, drawPaint);
+			// drawPath.reset();
+			break;
 		default:
-		    return false;
+			return true;
 		}
-		invalidate();
+
+		// When a cell is touched, set its value to true to draw it in onDraw,
+		// or false to erase
+		if (column >= 0 && column < numColumns && row >= 0 && row < numRows) {
+			cellChecked[column][row] = (isErase ? false : true);
+			invalidate();
+		}
+
 		return true;
 	}
-	
-	public void setErase(boolean isErase){
-		//set erase true or false
-		erase=isErase;
-		if(erase) drawPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-		else drawPaint.setXfermode(null);
-	}
-	
-	public void setStrokeWidth(float newSize){
-		//update size
-		drawPaint.setStrokeWidth(newSize);
-		}
-	
 }
