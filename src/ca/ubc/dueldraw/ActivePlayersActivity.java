@@ -57,6 +57,7 @@ public class ActivePlayersActivity extends Activity {
                  // do what you intend to do on click of listview row
                  
              	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+             	intent.putExtra("playerNumber",value);
             	startActivity(intent);
            }
         });

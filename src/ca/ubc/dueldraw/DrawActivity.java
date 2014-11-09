@@ -20,6 +20,7 @@ public class DrawActivity extends Activity {
 	protected TextView timerTextView;
 	private int timeLimit = 15000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
+	private boolean[][] refImage;
 	//private int refImageID;
 	//private HashMap<Integer, boolean[][]> refImageMapping;
 
@@ -117,7 +118,7 @@ public class DrawActivity extends Activity {
 
 				public void onFinish() {
 					timerTextView.setText("Done! Click start to draw again.");
-					Toast.makeText(getApplicationContext(), "Time's Up!",
+					Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+calculateScore(),
 							Toast.LENGTH_SHORT).show();
 					stopDrawing();
 					timerRunning = false;
@@ -127,6 +128,22 @@ public class DrawActivity extends Activity {
 		}
 	}
 	
+	public int calculateScore(){
+		boolean[][] drawnImage = pixelGrid.getCellChecked( );
+		int matchingCellCount = 0, cellCheckCountRefImage = 0;
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				if(refImage[i][j]){
+					cellCheckCountRefImage++;
+				}
+				if(refImage[i][j] == drawnImage[i][j]) {
+					matchingCellCount++;
+				}
+			}
+		}
+		return (100*matchingCellCount)/cellCheckCountRefImage;
+	}
+	
 	/* Starts the countdown timer to display the reference image */
 	public void startDisplayImageTimer(View view) {
 		if (refTimerRunning) {
@@ -134,16 +151,16 @@ public class DrawActivity extends Activity {
 		} else{
 			refTimerRunning = true;
 			
-			boolean[][] temp = new boolean[rows][columns];
+			refImage = new boolean[rows][columns];
 			//Arrays.fill(temp, true);
 			//temp[1][1] = true;
 			
 			for (int i = 0; i < columns; i++) {
 				for (int j = 0; j < rows; j++) {
-						temp[i][j] = true;
+						refImage[i][j] = true;
 				}
 			}
-			pixelGrid.setCellChecked( temp );
+			pixelGrid.setCellChecked( refImage );
 			
 			new CountDownTimer(refTimeLimit, 1000) {
 	
