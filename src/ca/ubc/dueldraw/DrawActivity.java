@@ -1,5 +1,8 @@
 package ca.ubc.dueldraw;
 
+import java.util.Arrays;
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -12,10 +15,13 @@ import android.widget.Toast;
 public class DrawActivity extends Activity {
 
 	private DrawingView pixelGrid;
-	private boolean timerRunning;
+	private boolean timerRunning, refTimerRunning;
 	private int rows, columns;
 	protected TextView timerTextView;
 	private int timeLimit = 15000; // drawing time limit in milliseconds
+	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
+	//private int refImageID;
+	//private HashMap<Integer, boolean[][]> refImageMapping;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -23,6 +29,7 @@ public class DrawActivity extends Activity {
 		setContentView(R.layout.activity_draw);
 		createPixelGrid(20, 20);
 		timerRunning = false;
+		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 	}
 
@@ -80,6 +87,7 @@ public class DrawActivity extends Activity {
 	public void saveImage(View view) {
 		Toast.makeText(getApplicationContext(), "Image Saved to Gallery",
 				Toast.LENGTH_SHORT).show();
+		pixelGrid.getCellChecked();
 	}
 
 	/* Clears the grid */
@@ -91,7 +99,7 @@ public class DrawActivity extends Activity {
 	}
 
 	/* Starts the countdown timer to start drawing input */
-	public void startTimer(View view) {
+	public void startDrawingTimer(View view) {
 		if (timerRunning) {
 			return;
 		} else {
@@ -113,8 +121,45 @@ public class DrawActivity extends Activity {
 							Toast.LENGTH_SHORT).show();
 					stopDrawing();
 					timerRunning = false;
+					refTimerRunning = false;
 				}
 			}.start();
 		}
+	}
+	
+	/* Starts the countdown timer to display the reference image */
+	public void startDisplayImageTimer(View view) {
+		if (refTimerRunning) {
+			return;
+		} else{
+			refTimerRunning = true;
+			
+			boolean[][] temp = new boolean[rows][columns];
+			//Arrays.fill(temp, true);
+			//temp[1][1] = true;
+			
+			for (int i = 0; i < columns; i++) {
+				for (int j = 0; j < rows; j++) {
+						temp[i][j] = true;
+				}
+			}
+			pixelGrid.setCellChecked( temp );
+			
+			new CountDownTimer(refTimeLimit, 1000) {
+	
+				public void onTick(long millisUntilFinished) {
+					timerTextView.setText("Seconds remaining: "
+							+ millisUntilFinished / 1000);
+				}
+	
+				public void onFinish() {
+					timerTextView.setText("Start drawing!");
+					Toast.makeText(getApplicationContext(), "Begin!",
+							Toast.LENGTH_SHORT).show();
+					startDrawingTimer(getWindow().getDecorView().findViewById(android.R.id.content));
+				}
+			}.start();
+		}
+		
 	}
 }

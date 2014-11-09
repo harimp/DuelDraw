@@ -15,6 +15,15 @@ public class DrawingView extends View {
 	private Paint blackPaint = new Paint();
 	private Paint whitePaint = new Paint();
 	private boolean[][] cellChecked;
+	public boolean[][] getCellChecked() {
+		return cellChecked;
+	}
+
+	public void setCellChecked(boolean[][] cellChecked) {
+		this.cellChecked = cellChecked;
+		invalidate();
+	}
+
 	private boolean isErase;
 	private boolean canDraw;
 
