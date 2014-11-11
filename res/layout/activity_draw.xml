@@ -16,6 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:textSize="20sp"
             android:text="Click Start to Begin Drawing" />
 
     </LinearLayout>
@@ -71,5 +72,4 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp" />
 
-	 
 </LinearLayout>

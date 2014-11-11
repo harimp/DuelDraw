@@ -171,7 +171,7 @@ public class DrawActivity extends Activity {
 			new CountDownTimer(refTimeLimit, 1000) {
 	
 				public void onTick(long millisUntilFinished) {
-					timerTextView.setText("Seconds remaining: "
+					timerTextView.setText("Time remaining: "
 							+ millisUntilFinished / 1000);
 				}
 	
