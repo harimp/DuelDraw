@@ -58,6 +58,9 @@ public class ActivePlayersActivity extends Activity {
                  
              	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
              	intent.putExtra("playerNumber",value);
+             	
+             	challengePlayer("DummyUserID");
+ 
             	startActivity(intent);
            }
         });
@@ -80,5 +83,12 @@ public class ActivePlayersActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+ 	private void challengePlayer(String playerID){
+		SocketApp app = (SocketApp) getApplicationContext();
+		app.sendMessage("6");
+		app.sendMessage(playerID);
+		app.recvMessage(); //get acknowledgement code 8
 	}
 }

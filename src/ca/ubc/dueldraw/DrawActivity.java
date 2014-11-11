@@ -1,7 +1,9 @@
 package ca.ubc.dueldraw;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -20,18 +22,28 @@ public class DrawActivity extends Activity {
 	protected TextView timerTextView;
 	private int timeLimit = 15000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
-	private boolean[][] refImage;
-	//private int refImageID;
-	//private HashMap<Integer, boolean[][]> refImageMapping;
+	private ArrayList<boolean[][]> refImagesList;
+	private int refImageIndex;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_draw);
+		initializeRefImages();
 		createPixelGrid(20, 20);
 		timerRunning = false;
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
+	}
+
+	private void initializeRefImages() {
+		// TODO Auto-generated method stub
+		
+		//initialize images
+		// generate random image list index
+		
+//		Random r = new Random();
+//		refImageIndex = r.nextInt(refImagesList.size());
 	}
 
 	/* initializes a pixelGrid with given dimensions */
@@ -131,6 +143,7 @@ public class DrawActivity extends Activity {
 	public int calculateScore(){
 		boolean[][] drawnImage = pixelGrid.getCellChecked( );
 		int matchingCellCount = 0, cellCheckCountRefImage = 0;
+		boolean[][] refImage = refImagesList.get(refImageIndex);
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
 				if(refImage[i][j]){
@@ -151,15 +164,8 @@ public class DrawActivity extends Activity {
 		} else{
 			refTimerRunning = true;
 			
-			refImage = new boolean[rows][columns];
-			//Arrays.fill(temp, true);
-			//temp[1][1] = true;
-			
-			for (int i = 0; i < columns; i++) {
-				for (int j = 0; j < rows; j++) {
-						refImage[i][j] = true;
-				}
-			}
+			//display reference image
+			boolean[][] refImage = refImagesList.get(refImageIndex);
 			pixelGrid.setCellChecked( refImage );
 			
 			new CountDownTimer(refTimeLimit, 1000) {
