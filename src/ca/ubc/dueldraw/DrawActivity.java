@@ -1,16 +1,22 @@
 package ca.ubc.dueldraw;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 
 public class DrawActivity extends Activity {
 
@@ -20,6 +26,7 @@ public class DrawActivity extends Activity {
 	protected TextView timerTextView;
 	private int timeLimit = 15000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
+	private boolean[][] pixels;
 	//private int refImageID;
 	//private HashMap<Integer, boolean[][]> refImageMapping;
 
@@ -31,6 +38,7 @@ public class DrawActivity extends Activity {
 		timerRunning = false;
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
+		imageToArray();
 	}
 
 	/* initializes a pixelGrid with given dimensions */
@@ -40,6 +48,30 @@ public class DrawActivity extends Activity {
 		pixelGrid = (DrawingView) findViewById(R.id.pixelGridView1);
 		pixelGrid.setNumColumns(columns);
 		pixelGrid.setNumRows(rows);
+	}
+	
+	private void imageToArray() {
+
+		Bitmap img = null;
+		File imgFile = new  File("/drawable/brush.png");
+		if(imgFile.exists()){
+			Log.i("imageToArray()", "Image exists");
+			img = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+			Log.i("imageToArray()", "File opened");
+			pixels = new boolean[columns][rows];
+			for( int i = 0; i < columns; i++ ){
+			    for( int j = 0; j < rows; j++ )
+			        if(img.getPixel(i,j) == 0){
+			        	pixels[i][j] = true;
+			        }
+			        else{
+			        	pixels[i][j] = false;
+			        }
+			}
+		}
+		else{
+			Log.i("imageToArray()", "File was not opened");
+		}
 	}
 
 	@Override

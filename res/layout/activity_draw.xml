@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#FFCCCCCC"
     android:orientation="vertical"
-    tools:context=".DrawActivity" >    
+    tools:context=".DrawActivity" >
     
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +61,7 @@
             android:onClick="saveImage"
             android:text="Save" />
     </LinearLayout>
-    
+
     <ca.ubc.dueldraw.DrawingView
         android:id="@+id/pixelGridView1"
         android:layout_width="350dp"
@@ -70,6 +70,5 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp" />
-
 	 
 </LinearLayout>
