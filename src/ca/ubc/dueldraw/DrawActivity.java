@@ -1,6 +1,7 @@
 package ca.ubc.dueldraw;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 public class DrawActivity extends Activity {
@@ -52,25 +54,21 @@ public class DrawActivity extends Activity {
 	
 	private void imageToArray() {
 
-		Bitmap img = null;
-		File imgFile = new  File("/drawable/brush.png");
-		if(imgFile.exists()){
-			Log.i("imageToArray()", "Image exists");
-			img = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-			Log.i("imageToArray()", "File opened");
-			pixels = new boolean[columns][rows];
-			for( int i = 0; i < columns; i++ ){
-			    for( int j = 0; j < rows; j++ )
-			        if(img.getPixel(i,j) == 0){
+		InputStream is = this.getResources().openRawResource(R.drawable.smiley);
+		Bitmap img = BitmapFactory.decodeStream(is);  
+
+		pixels = new boolean[columns][rows];
+		for( int i = 0; i < columns; i++ ) {
+		   
+			for( int j = 0; j < rows; j++ ) {
+		        Log.i("getPixel(i,j)", Integer.toString(img.getPixel(i, j)));
+			    	if(img.getPixel(i,j) == Color.BLACK ){
 			        	pixels[i][j] = true;
 			        }
 			        else{
 			        	pixels[i][j] = false;
 			        }
 			}
-		}
-		else{
-			Log.i("imageToArray()", "File was not opened");
 		}
 	}
 
@@ -175,7 +173,7 @@ public class DrawActivity extends Activity {
 						temp[i][j] = true;
 				}
 			}
-			pixelGrid.setCellChecked( temp );
+			pixelGrid.setCellChecked( pixels );
 			
 			new CountDownTimer(refTimeLimit, 1000) {
 	
