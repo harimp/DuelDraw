@@ -23,18 +23,25 @@ public class DrawActivity extends Activity {
 	private boolean timerRunning, refTimerRunning;
 	private int rows, columns;
 	protected TextView timerTextView;
-	private int timeLimit = 15000; // drawing time limit in milliseconds
-	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
+	//private int timeLimit = 15000; // drawing time limit in milliseconds
+	private int timeLimit = 3000;  private int refTimeLimit = 3000;
+	//private int refTimeLimit = 5000; // reference image display time limit in milliseconds
 	private final int numberOfImages = 7; //number of reference images
 	private int refImageIndex;
 	private ArrayList<Integer> refImagesList;
 	private boolean[][] refImage;
+	private boolean TESTING = true; //USE 3x3 for testing
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_draw);
-		createPixelGrid(20, 20);
+		if(TESTING){
+			createPixelGrid(3,3);
+		}
+		else{
+			createPixelGrid(20, 20);	
+		}
 		timerRunning = false;
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
@@ -178,7 +185,7 @@ public class DrawActivity extends Activity {
 	public int calculateScore(){
 		boolean[][] drawnImage = pixelGrid.getCellChecked( );
 		double matchingCellCount = 0; double refCheckedCells = 0;
-		double penalty = 1/(rows*columns); int incorrect = 0;
+		double penalty = 1/(double)(rows*columns); double incorrect = 0;
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
 				if(refImage[i][j]){
@@ -192,8 +199,13 @@ public class DrawActivity extends Activity {
 				}
 			}
 		}
-		double score = (matchingCellCount - (double)incorrect*penalty)/refCheckedCells;
-		Log.i("SCORE IS", Double.toString(score));
+		double score = (matchingCellCount/refCheckedCells) - (incorrect*penalty);
+		if(TESTING){
+			Log.i("MATCHING:", Double.toString(matchingCellCount));
+			Log.i("INCORRECT:", Double.toString(incorrect));
+			Log.i("PENALTY:", Double.toString(incorrect*penalty));
+			Log.i("SCORE:", Double.toString(score));
+		}
 		return (int)(score*100);
 	}
 	
@@ -204,7 +216,16 @@ public class DrawActivity extends Activity {
 		} else{
 			refTimerRunning = true;
 			
-			getRefImage();
+			if(TESTING){
+				refImage = new boolean[3][3];
+				for(int i = 0; i<3; i++){
+					refImage[i][i] = true;
+				}
+			}
+			else{
+				getRefImage();
+			}
+			
 			pixelGrid.setCellChecked( refImage );
 			
 			new CountDownTimer(refTimeLimit, 1000) {
