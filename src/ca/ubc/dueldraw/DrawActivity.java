@@ -256,7 +256,6 @@ public class DrawActivity extends Activity {
 	}
 
 	private void sendPlayerScore_ProtocolK(int score) {
-		// TODO Auto-generated method stub
 		app = (SocketApp) getApplicationContext();
 		app.sendMessage("K");
 		app.sendMessage(Integer.toString(score));
