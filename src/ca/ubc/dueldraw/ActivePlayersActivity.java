@@ -1,6 +1,7 @@
 package ca.ubc.dueldraw;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ public class ActivePlayersActivity extends Activity {
 	ListView listView ;
 	String[] values;
 	SocketApp app;
+	ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,27 @@ public class ActivePlayersActivity extends Activity {
              	//intent.putExtra("playerNumber",value);
              	
              	requestChallenge_ProtocolG(opponentID);
- 
-            	startActivity(intent);
+             	
+             	pd = ProgressDialog.show(ActivePlayersActivity.this, "Challenge Sent",
+           			  "Waiting for Opponent to Accept", true);
+           	
+	           	new Thread(new Runnable() {
+	           		  @Override
+	           		  public void run()
+	           		  {
+	           		    // wait for game start ping from DE2
+	           			 while(app.startGame);
+	           		    runOnUiThread(new Runnable() {
+	           		      @Override
+	           		      public void run()
+	           		      {
+	           		        pd.dismiss();
+	           		      }
+	           		    });
+	           		  }
+	           		}).start();
+	 
+            	//startActivity(intent); DrawActivity will start on receiving start message
            }
         });
 	}

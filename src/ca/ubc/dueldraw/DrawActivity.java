@@ -70,14 +70,15 @@ public class DrawActivity extends Activity {
 
 	private void getRefImage() {
 		// generate a random number
-		Random rand = new Random();
-		int max = numberOfImages - 1;
-		int min = 0;
-		int randomNum = rand.nextInt((max - min) + 1) + min;
+//		Random rand = new Random();
+//		int max = numberOfImages - 1;
+//		int min = 0;
+//		int randomNum = rand.nextInt((max - min) + 1) + min;
+		
+		int refImageID = getIntent().getIntExtra("refImageID", 0); //get refImageID from SocketApp
 
-		// access the image
-		int refImageIndex = refImagesList.get(randomNum);
-		imageToArray(refImageIndex);
+//		int refImageID = refImagesList.get(randomNum);
+		imageToArray(refImageID);
 	}
 
 	private void imageToArray(int refImageIndex) {

@@ -267,6 +267,9 @@ public class SocketApp extends Application {
 			case 'J': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
 					Toast.LENGTH_SHORT).show();
 					startGame = true;
+					Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+		         	intent.putExtra("refImageID", (int) str.charAt(1));
+		         	startActivity(intent);
 					break;
 			case 'L': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
 					Toast.LENGTH_SHORT).show();
