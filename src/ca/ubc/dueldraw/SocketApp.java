@@ -245,10 +245,10 @@ public class SocketApp extends Application {
 						.setCancelable(false)
 						.setPositiveButton("Accept",new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,int id) {
-								// if this button is clicked, open new activity
+
 								userChallengeResponse_ProtocolI(true);
-				             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
-				             	startActivity(intent);
+//				             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+//				             	startActivity(intent);
 							}
 						  })
 						.setNegativeButton("Deny",new DialogInterface.OnClickListener() {
