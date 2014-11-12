@@ -46,7 +46,7 @@ public class SocketApp extends Application {
 
 	public void openSocket() {
 		Toast.makeText(getApplicationContext(), "Opening Socket.",
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 		// Make sure the socket is not already opened
 		if (sock != null && sock.isConnected() && !sock.isClosed()) {
 			Toast.makeText(getApplicationContext(), "Socket already open",
@@ -88,7 +88,7 @@ public class SocketApp extends Application {
 		}
 		
 		Toast.makeText(getApplicationContext(), "Sending: "+str,
-				Toast.LENGTH_LONG).show();
+				Toast.LENGTH_SHORT).show();
 	}
 
 	public void recvMessage() {
@@ -132,7 +132,7 @@ public class SocketApp extends Application {
 				msg = "Connection could not be opened";
 			}
 			Toast t = Toast.makeText(getApplicationContext(), msg,
-					Toast.LENGTH_LONG);
+					Toast.LENGTH_SHORT);
 			t.show();
 		}
 
@@ -159,7 +159,7 @@ public class SocketApp extends Application {
 		}
 
 		protected void onPostExecute(String str) {
-			Toast.makeText(getApplicationContext(), "Received: "+ str, Toast.LENGTH_LONG)
+			Toast.makeText(getApplicationContext(), "Received: "+ str, Toast.LENGTH_SHORT)
 					.show();
 		}
 	}
