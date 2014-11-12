@@ -1,6 +1,7 @@
 package ca.ubc.dueldraw;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +17,7 @@ public class ActivePlayersActivity extends Activity {
 	ListView listView ;
 	String[] values;
 	SocketApp app;
+	ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +53,32 @@ public class ActivePlayersActivity extends Activity {
                  // assuming string and if you want to get the value on click of list item
                  // do what you intend to do on click of listview row
                  
-             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+//             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
              	//intent.putExtra("playerNumber",value);
              	
              	requestChallenge_ProtocolG(opponentID);
+             	
+             	pd = ProgressDialog.show(ActivePlayersActivity.this, "Challenge Sent",
+             			  "Waiting for Opponent to Accept", true);
+             	
+             	new Thread(new Runnable() {
+             		  @Override
+             		  public void run()
+             		  {
+             		    // wait for game start ping from DE2
+             			 while(app.startGame);
+             		    runOnUiThread(new Runnable() {
+             		      @Override
+             		      public void run()
+             		      {
+             		        pd.dismiss();
+             		      }
+             		    });
+             		  }
+             		}).start();
+             	
  
-            	startActivity(intent);
+//            	startActivity(intent);
            }
         });
 	}

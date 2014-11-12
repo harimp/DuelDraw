@@ -25,7 +25,7 @@ public class SocketApp extends Application {
 	private String ipAddress = "128.189.93.239";
 	private Integer port = 50002;
 	Socket sock = null;
-	private boolean verbose = false;
+	private boolean verbose = true;
 	
 	private ArrayList<String> playerList;
 	private int numberOfActivePlayers;
@@ -220,11 +220,10 @@ public class SocketApp extends Application {
 			case 'E': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
 					// store player info in ArrayList of active players
-					playerList.add(str.substring(1));
+					String temp[] = (str.substring(1)).split(",");
+					playerList.addAll(Arrays.asList(temp));
+//					playerList.add(str.substring(1));
 					System.out.println("Added to list: " + str.substring(1));
-					requestNextMessage();
-					// listen for more players to be sent
-//					recvMessage();
 					break;		
 					
 			case 'F': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: End of Player List",
@@ -268,6 +267,9 @@ public class SocketApp extends Application {
 			case 'J': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
 					Toast.LENGTH_SHORT).show();
 					startGame = true;
+		         	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+		         	intent.putExtra("refImageID", (int) str.charAt(1));
+		         	startActivity(intent);
 					break;
 			case 'L': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
 					Toast.LENGTH_SHORT).show();
