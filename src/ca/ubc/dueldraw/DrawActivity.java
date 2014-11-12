@@ -54,6 +54,7 @@ public class DrawActivity extends Activity {
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 		initializeRefImages();
+		startDisplayImageTimer(getWindow().getDecorView().findViewById(android.R.id.content)); //display the image when the activity starts
 	}
 
 	private void initializeRefImages() {
@@ -246,6 +247,7 @@ public class DrawActivity extends Activity {
 									Toast.LENGTH_SHORT).show();
 						startDrawingTimer(getWindow().getDecorView()
 								.findViewById(android.R.id.content));
+						refTimerRunning = false;
 					}
 				}.start();
 			}
