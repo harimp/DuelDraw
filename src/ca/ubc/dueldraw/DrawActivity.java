@@ -29,7 +29,7 @@ public class DrawActivity extends Activity {
 	private int refImageIndex;
 	private ArrayList<Integer> refImagesList;
 	private boolean[][] refImage;
-	private boolean TESTING = true; //USE 3x3 for testing
+	private boolean TESTING = false; //USE 3x3 for testing
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -200,12 +200,15 @@ public class DrawActivity extends Activity {
 				}
 			}
 		}
-		double score = (matchingCellCount/refCheckedCells) - (incorrect*penalty);
+		double score = (matchingCellCount - (incorrect*penalty))/refCheckedCells;
 		if(TESTING){
 			Log.i("MATCHING:", Double.toString(matchingCellCount));
 			Log.i("INCORRECT:", Double.toString(incorrect));
 			Log.i("PENALTY:", Double.toString(incorrect*penalty));
 			Log.i("SCORE:", Double.toString(score));
+		}
+		if(score < 0){
+			return 0;
 		}
 		return (int)(score*100);
 	}
