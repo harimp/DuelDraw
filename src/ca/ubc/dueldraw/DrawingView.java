@@ -15,6 +15,8 @@ public class DrawingView extends View {
 	private Paint blackPaint = new Paint();
 	private Paint whitePaint = new Paint();
 	private boolean[][] cellChecked;
+	private boolean verbose = false;
+	
 	public boolean[][] getCellChecked() {
 		return cellChecked;
 	}
@@ -138,9 +140,11 @@ public class DrawingView extends View {
 		int column = (int) (event.getX() / cellWidth);
 		int row = (int) (event.getY() / cellHeight);
 
-		Log.i("X", Integer.toString(column));
-		Log.i("Y", Integer.toString(row));
-
+		if(verbose){
+			Log.i("X", Integer.toString(column));
+			Log.i("Y", Integer.toString(row));
+		}
+		
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			// drawPath.moveTo(touchX, touchY);

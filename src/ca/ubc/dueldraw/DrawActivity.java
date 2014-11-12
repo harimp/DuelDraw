@@ -142,13 +142,6 @@ public class DrawActivity extends Activity {
 		pixelGrid.startDrawing();
 	}
 
-	/* TODO: Save the pixelGrid to a file */
-	public void saveImage(View view) {
-		if(verbose) Toast.makeText(getApplicationContext(), "Image Saved to Gallery",
-					   Toast.LENGTH_SHORT).show();
-		pixelGrid.getCellChecked();
-	}
-
 	/* Clears the grid */
 	public void clearGrid(View view) {
 		if (timerRunning) {
