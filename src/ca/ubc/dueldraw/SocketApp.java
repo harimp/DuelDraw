@@ -25,7 +25,7 @@ public class SocketApp extends Application {
 	private String ipAddress = "128.189.93.239";
 	private Integer port = 50002;
 	Socket sock = null;
-	private boolean verbose = true;
+	private boolean verbose = false;
 	
 	private ArrayList<String> playerList;
 	private int numberOfActivePlayers;
