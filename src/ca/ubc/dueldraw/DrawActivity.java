@@ -23,9 +23,8 @@ public class DrawActivity extends Activity {
 	private boolean timerRunning, refTimerRunning;
 	private int rows, columns;
 	protected TextView timerTextView;
-	//private int timeLimit = 15000; // drawing time limit in milliseconds
-	private int timeLimit = 3000;  private int refTimeLimit = 3000;
-	//private int refTimeLimit = 5000; // reference image display time limit in milliseconds
+	private int timeLimit = 15000; // drawing time limit in milliseconds
+	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
 	private final int numberOfImages = 7; //number of reference images
 	private int refImageIndex;
 	private ArrayList<Integer> refImagesList;
@@ -38,6 +37,8 @@ public class DrawActivity extends Activity {
 		setContentView(R.layout.activity_draw);
 		if(TESTING){
 			createPixelGrid(3,3);
+			timeLimit = 3000;  
+			refTimeLimit = 3000;
 		}
 		else{
 			createPixelGrid(20, 20);	
