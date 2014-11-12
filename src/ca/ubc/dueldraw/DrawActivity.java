@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -176,15 +177,24 @@ public class DrawActivity extends Activity {
 	
 	public int calculateScore(){
 		boolean[][] drawnImage = pixelGrid.getCellChecked( );
-		int matchingCellCount = 0;
+		double matchingCellCount = 0; double refCheckedCells = 0;
+		double penalty = 1/(rows*columns); int incorrect = 0;
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				if(drawnImage[i][j] ==  refImage[i][j]) {
+				if(refImage[i][j]){
+					refCheckedCells++;
+				}
+				if((drawnImage[i][j] == refImage[i][j]) && drawnImage[i][j] == true) {
 					matchingCellCount++;
+				}
+				if(drawnImage[i][j]==true && refImage[i][j]==false){
+					incorrect++;
 				}
 			}
 		}
-		return (100*matchingCellCount)/(rows*columns); //returns percentage of matching pixels
+		double score = (matchingCellCount - (double)incorrect*penalty)/refCheckedCells;
+		Log.i("SCORE IS", Double.toString(score));
+		return (int)(score*100);
 	}
 	
 	/* Starts the countdown timer to display the reference image */
