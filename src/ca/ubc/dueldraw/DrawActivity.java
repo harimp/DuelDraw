@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,15 +26,24 @@ public class DrawActivity extends Activity {
 	private int timeLimit = 15000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
 	private final int numberOfImages = 7; //number of reference images
-	private int refImageIndex;
 	private ArrayList<Integer> refImagesList;
 	private boolean[][] refImage;
+	private boolean TESTING = false; //USE 3x3 for testing
+	
+	SocketApp app;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_draw);
-		createPixelGrid(20, 20);
+		if(TESTING){
+			createPixelGrid(3,3);
+			timeLimit = 3000;  
+			refTimeLimit = 3000;
+		}
+		else{
+			createPixelGrid(20, 20);	
+		}
 		timerRunning = false;
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
@@ -51,31 +61,31 @@ public class DrawActivity extends Activity {
 		refImagesList.add(R.drawable.squares);
 		refImagesList.add(R.drawable.random);
 	}
-	
+
 	private void getRefImage() {
 		// generate a random number
 		Random rand = new Random();
 		int max = numberOfImages-1; int min = 0;
 		int randomNum = rand.nextInt((max - min) + 1) + min;
-		
+
 		// access the image 
 		int refImageIndex = refImagesList.get(randomNum);
 		imageToArray(refImageIndex);
 	}
-	
+
 	private void imageToArray(int refImageIndex) {
 		InputStream is = this.getResources().openRawResource(refImageIndex);
 		Bitmap img = BitmapFactory.decodeStream(is);  
 		refImage = new boolean[columns][rows];
-		
+
 		for( int i = 0; i < columns; i++ ) {
 			for( int j = 0; j < rows; j++ ) {
-			    	if(img.getPixel(i,j) == Color.BLACK ){
-			        	refImage[i][j] = true;
-			        }
-			        else{
-			        	refImage[i][j] = false;
-			        }
+				if(img.getPixel(i,j) == Color.BLACK ){
+					refImage[i][j] = true;
+				}
+				else{
+					refImage[i][j] = false;
+				}
 			}
 		}
 	}
@@ -109,7 +119,7 @@ public class DrawActivity extends Activity {
 		if (timerRunning) {
 			pixelGrid.setErase(true);
 			Toast.makeText(getApplicationContext(), "Erase", Toast.LENGTH_SHORT)
-					.show();
+				.show();
 		}
 	}
 
@@ -118,7 +128,7 @@ public class DrawActivity extends Activity {
 		if (timerRunning) {
 			pixelGrid.setErase(false);
 			Toast.makeText(getApplicationContext(), "Draw", Toast.LENGTH_SHORT)
-					.show();
+				.show();
 		}
 	}
 
@@ -133,7 +143,7 @@ public class DrawActivity extends Activity {
 	/* TODO: Save the pixelGrid to a file */
 	public void saveImage(View view) {
 		Toast.makeText(getApplicationContext(), "Image Saved to Gallery",
-				Toast.LENGTH_SHORT).show();
+					   Toast.LENGTH_SHORT).show();
 		pixelGrid.getCellChecked();
 	}
 
@@ -154,64 +164,102 @@ public class DrawActivity extends Activity {
 			startDrawing();
 			clearGrid(view);
 			Toast.makeText(getApplicationContext(), "Started Timer",
-					Toast.LENGTH_SHORT).show();
+						   Toast.LENGTH_SHORT).show();
 			new CountDownTimer(timeLimit, 1000) {
 
 				public void onTick(long millisUntilFinished) {
 					timerTextView.setText("seconds remaining: "
-							+ millisUntilFinished / 1000);
+										  + millisUntilFinished / 1000);
 				}
 
 				public void onFinish() {
 					timerTextView.setText("Done! Click start to draw again.");
-					Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+calculateScore(),
-							Toast.LENGTH_SHORT).show();
+					int score = calculateScore();
+					Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+ score,
+								   Toast.LENGTH_SHORT).show();
 					stopDrawing();
+					sendPlayerScore_ProtocolK(score);
 					timerRunning = false;
 					refTimerRunning = false;
 				}
 			}.start();
 		}
 	}
-	
+
 	public int calculateScore(){
 		boolean[][] drawnImage = pixelGrid.getCellChecked( );
-		int matchingCellCount = 0;
+		double matchingCellCount = 0; double refCheckedCells = 0;
+		double penalty = 1/(double)(rows*columns); double incorrect = 0;
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				if(drawnImage[i][j] ==  refImage[i][j]) {
+				if(refImage[i][j]){
+					refCheckedCells++;
+				}
+				if((drawnImage[i][j] == refImage[i][j]) && drawnImage[i][j] == true) {
 					matchingCellCount++;
+				}
+				if(drawnImage[i][j]==true && refImage[i][j]==false){
+					incorrect++;
 				}
 			}
 		}
-		return (100*matchingCellCount)/(rows*columns); //returns percentage of matching pixels
+		double score = (matchingCellCount - (incorrect*penalty))/refCheckedCells;
+		if(TESTING){
+			Log.i("MATCHING:", Double.toString(matchingCellCount));
+			Log.i("INCORRECT:", Double.toString(incorrect));
+			Log.i("PENALTY:", Double.toString(incorrect*penalty));
+			Log.i("SCORE:", Double.toString(score));
+		}
+		if(score < 0){
+			return 0;
+		}
+		return (int)(score*100);
 	}
-	
+
 	/* Starts the countdown timer to display the reference image */
 	public void startDisplayImageTimer(View view) {
 		if (refTimerRunning) {
 			return;
 		} else{
-			refTimerRunning = true;
-			
-			getRefImage();
-			pixelGrid.setCellChecked( refImage );
-			
-			new CountDownTimer(refTimeLimit, 1000) {
+			app = (SocketApp) getApplicationContext();
+			if(app.startGame){
+				refTimerRunning = true;
 	
-				public void onTick(long millisUntilFinished) {
-					timerTextView.setText("Time remaining: "
-							+ millisUntilFinished / 1000);
+				if(TESTING){
+					refImage = new boolean[3][3];
+					for(int i = 0; i<3; i++){
+						refImage[i][i] = true;
+					}
+				}
+				else{
+					getRefImage();
 				}
 	
-				public void onFinish() {
-					timerTextView.setText("Start drawing!");
-					Toast.makeText(getApplicationContext(), "Begin!",
-							Toast.LENGTH_SHORT).show();
-					startDrawingTimer(getWindow().getDecorView().findViewById(android.R.id.content));
-				}
-			}.start();
+				pixelGrid.setCellChecked( refImage );
+	
+				new CountDownTimer(refTimeLimit, 1000) {
+	
+					public void onTick(long millisUntilFinished) {
+						timerTextView.setText("Time remaining: "
+											  + millisUntilFinished / 1000);
+					}
+	
+					public void onFinish() {
+						timerTextView.setText("Start drawing!");
+						Toast.makeText(getApplicationContext(), "Begin!",
+									   Toast.LENGTH_SHORT).show();
+						startDrawingTimer(getWindow().getDecorView().findViewById(android.R.id.content));
+					}
+				}.start();
+			}
 		}
-		
+
+	}
+	
+	private void sendPlayerScore_ProtocolK(int score) {
+		// TODO Auto-generated method stub
+		app = (SocketApp) getApplicationContext();
+		app.sendMessage("K");
+		app.sendMessage(Integer.toString(score));
 	}
 }

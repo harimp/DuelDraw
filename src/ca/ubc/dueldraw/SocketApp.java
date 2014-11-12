@@ -7,22 +7,49 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import android.app.AlertDialog;
 import android.app.Application;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.provider.Settings.Secure;
 import android.widget.Toast;
 
 public class SocketApp extends Application {
-	private String ipAddress = "206.87.135.154";
+	private String ipAddress = "128.189.93.239";
 	private Integer port = 50002;
 	Socket sock = null;
 	private boolean verbose = true;
+	
+	private ArrayList<String> playerList;
+	private int numberOfActivePlayers;
+	boolean playerListReady = false;
+	
+	boolean userWon = false;
+	boolean userInitalConnectionAcknowledge = false;
+	boolean startGame = false;
+	
+	String opponentID;
+
+	public String[] getPlayerList() {
+		return playerList.toArray(new String[playerList.size()]);
+	}
+
+	public void setPlayerList(String[] playerList) {
+		this.playerList = new ArrayList(Arrays.asList(playerList));
+	}
 
 	public void onCreate() {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
 				.detectDiskReads().detectDiskWrites().detectNetwork()
 				.penaltyLog().build());
+		playerList = new ArrayList<String>();
 		super.onCreate();
 		/**
 		 * Code to convert URL into IP
@@ -39,6 +66,9 @@ public class SocketApp extends Application {
 //			 e.printStackTrace();
 //		 }
 		openSocket();
+		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
+        Timer tcp_timer = new Timer();
+        tcp_timer.schedule(tcp_task, 0, 100);
 	}
 
 	public void onDestroy() {
@@ -47,7 +77,7 @@ public class SocketApp extends Application {
 
 	public void openSocket() {
 		if(verbose){ Toast.makeText(getApplicationContext(), "Info: Opening Socket...",
-				Toast.LENGTH_LONG).show(); }
+				Toast.LENGTH_SHORT).show(); }
 		
 		// Make sure the socket is not already opened
 		if (sock != null && sock.isConnected() && !sock.isClosed()) {
@@ -74,8 +104,8 @@ public class SocketApp extends Application {
 		// Create an array of bytes. First byte will be the
 		// message length, and the next ones will be the message
 		byte buf[] = new byte[str.length() + 1];
-		buf[0] = (byte) str.length();
-		System.arraycopy(str.getBytes(), 0, buf, 1, str.length());
+		System.arraycopy(str.getBytes(), 0, buf, 0, str.length());
+		buf[str.length()] = '\0';
 
 		// Now send through the output stream of the socket
 
@@ -131,7 +161,8 @@ public class SocketApp extends Application {
 			String msg;
 			if (sock.isConnected()) {
 				msg = "Info: Connection opened successfully";
-				setupUserData();
+//				setupUserData_ProtocolA();
+				requestListOfActivePlayers_ProtocolC();
 			} else {
 				msg = "Info: Connection could not be opened";
 			}
@@ -162,33 +193,135 @@ public class SocketApp extends Application {
 		}
 
 		protected void onPostExecute(String str) {
-			if(verbose){ Toast.makeText(getApplicationContext(), "Received: " + str,
-					Toast.LENGTH_SHORT).show();	}
+		if( str != null ) {
+			if(verbose) Toast.makeText(getApplicationContext(), "Received: " + str,
+					Toast.LENGTH_SHORT).show();
+			
+			/* Structure of message from DE2: [0] Protocol ID (A,B,P,etc)
+			 * 								  [1..] Message
+			 */
+			switch(str.charAt(0)){
+			case 'B': Toast.makeText(getApplicationContext(), "Protocol: Connection Acknoledged",
+					Toast.LENGTH_SHORT).show();
+					// check for boolean value whether user connection acknowledged
+//					if((int) str.charAt(1) == 1) 	userInitalConnectionAcknowledge = true;
+					//requestListOfActivePlayers_ProtocolC();
+					break;
+					
+			case 'D': Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
+					Toast.LENGTH_SHORT).show();
+					// initialize player list based on number of players that are active
+					numberOfActivePlayers = (int) str.charAt(1);
+					requestNextMessage();
+					// listen for players list to be sent one by one
+//					if(numberOfActivePlayers > 0)	recvMessage();
+					break;	
+					
+			case 'E': Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
+					Toast.LENGTH_SHORT).show();
+					// store player info in ArrayList of active players
+					playerList.add(str.substring(1));
+					System.out.println("Added to list: " + str.substring(1));
+					requestNextMessage();
+					// listen for more players to be sent
+//					recvMessage();
+					break;		
+					
+			case 'F': Toast.makeText(getApplicationContext(), "Protocol: End of Player List",
+					Toast.LENGTH_SHORT).show();
+					// player list is ready if all the active players have been received
+					if(playerList.size() == numberOfActivePlayers) playerListReady = true;
+					break;
+					
+			case 'H': Toast.makeText(getApplicationContext(), "Protocol: Accept Challenge From = " + str.substring(1),
+					Toast.LENGTH_SHORT).show();
+					opponentID = str.substring(1);
+					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+							getApplicationContext());
+					// set title
+					alertDialogBuilder.setTitle("Challenge!");			 
+					// set dialog message
+					alertDialogBuilder
+						.setMessage("You have been challenged by "+opponentID)
+						.setCancelable(false)
+						.setPositiveButton("Accept",new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,int id) {
+								// if this button is clicked, open new activity
+								userChallengeResponse_ProtocolI(true);
+				             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
+				             	startActivity(intent);
+							}
+						  })
+						.setNegativeButton("Deny",new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,int id) {
+								// if this button is clicked, just close
+								// the dialog box and do nothing
+								userChallengeResponse_ProtocolI(false);
+								dialog.cancel();
+							}
+						});
+					// create alert dialog
+					AlertDialog alertDialog = alertDialogBuilder.create();
+					// show dialog
+					alertDialog.show();
+					break;
+			case 'J': Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
+					Toast.LENGTH_SHORT).show();
+					startGame = true;
+					break;
+			case 'L': Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
+					Toast.LENGTH_SHORT).show();
+					if((int) str.charAt(1) == 1) userWon = true;
+					break;
+			default: Toast.makeText(getApplicationContext(), "Protocol: Invalid!",
+					Toast.LENGTH_SHORT).show();
+					break;
+				
+			}
 		}
+		}
+
+
 	}
 	
-	private void setupUserData() {
-		sendMessage("0");
+	private void requestListOfActivePlayers_ProtocolC() {
+		sendMessage("C");
+	}
+	
+	private void requestNextMessage() {
+		sendMessage("X");
+	}
+	
+	private void setupUserData_ProtocolA() {
+		sendMessage("A");
 		sendMessage(Secure.getString(getContentResolver(), Secure.ANDROID_ID));
-		recvMessage();
+//		recvMessage();
+	}
+	
+	private void userChallengeResponse_ProtocolI(boolean accept) {
+		sendMessage("I");
+		if (accept)	{	sendMessage("1");	}
+		else { sendMessage("0");	}
+//		recvMessage();
 	}
 
 	
-//	public class TCPReadTimerTask extends TimerTask {
-//		public void run() {
-//             	new Thread(new Runnable(){
-//             	    @Override
-//             	    public void run() {
-//             	        try {
-//             	        	SocketApp app = (SocketApp) getApplicationContext();
-//             				if (app.sock != null && app.sock.isConnected()
-//             						&& !app.sock.isClosed()) {
-//             				}
-//             	        } catch (Exception ex) {
-//             	            ex.printStackTrace();
-//             	        }
-//             	    }
-//             	}).start();
-//			}
-//		}
+	public class TCPReadTimerTask extends TimerTask {
+		public void run() {
+             	new Thread(new Runnable(){
+             	    @Override
+             	    public void run() {
+             	        try {
+             	        	SocketApp app = (SocketApp) getApplicationContext();
+             				if (app.sock != null && app.sock.isConnected()
+             						&& !app.sock.isClosed()) {
+             					recvMessage();
+             				}
+             	        } catch (Exception ex) {
+             	            ex.printStackTrace();
+             	        }
+             	    }
+             	}).start();
+			}
+		}
 }
