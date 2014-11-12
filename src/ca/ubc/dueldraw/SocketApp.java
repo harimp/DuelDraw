@@ -33,7 +33,7 @@ public class SocketApp extends Application {
 	
 	boolean userWon = false;
 	boolean userInitalConnectionAcknowledge = false;
-	boolean startGame = true;
+	boolean startGame = false;
 	
 	String opponentID;
 

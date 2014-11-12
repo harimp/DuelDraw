@@ -69,7 +69,7 @@ public class ActivePlayersActivity extends Activity {
 	           		  public void run()
 	           		  {
 	           		    // wait for game start ping from DE2
-	           			 while(app.startGame);
+	           			 while(!app.startGame);
 	           		    runOnUiThread(new Runnable() {
 	           		      @Override
 	           		      public void run()
