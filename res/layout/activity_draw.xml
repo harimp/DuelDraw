@@ -4,64 +4,60 @@
     android:layout_height="match_parent"
     android:background="#FFCCCCCC"
     android:orientation="vertical"
-    tools:context=".DrawActivity" >    
-    
-    <LinearLayout
+    tools:context=".DrawActivity" >
+
+    <TextView
+        android:id="@+id/timerTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
-
-        <TextView
-            android:id="@+id/timerTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:text="Click Start to Begin Drawing" />
-
-    </LinearLayout>
+        android:gravity="center"
+        android:text="@string/placeholder"
+        android:textSize="30sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.25"
         android:gravity="center" >
 
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:onClick="setDraw"
-            android:text="Draw" />
+            android:text="@string/draw" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:onClick="setErase"
-            android:text="Erase" />
+            android:text="@string/erase" />
 
         <Button
             android:id="@+id/button4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="0.25"
             android:onClick="startDisplayImageTimer"
-            android:text="Start" />
+            android:text="@string/start" />
 
         <Button
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Clear"
-            android:onClick="clearGrid" />
+            android:layout_weight="0.25"
+            android:onClick="clearGrid"
+            android:text="@string/clear" />
     </LinearLayout>
-    
+
     <ca.ubc.dueldraw.DrawingView
         android:id="@+id/pixelGridView1"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="3dp" />

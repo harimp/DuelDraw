@@ -9,15 +9,15 @@
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <application
+        android:name=".SocketApp"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" 
-        android:name=".SocketApp">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name=".MenuActivity"
+            android:name=".SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +26,18 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".MenuActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".ActivePlayersActivity"
-            android:label="@string/title_activity_active_players" >
+            android:label="@string/logo"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".DrawActivity"
-            android:label="@string/title_activity_draw" 
+            android:label="@string/logo"
             android:screenOrientation="portrait" >
         </activity>
     </application>

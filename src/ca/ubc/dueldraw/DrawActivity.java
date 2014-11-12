@@ -11,9 +11,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,28 +23,32 @@ public class DrawActivity extends Activity {
 	private boolean timerRunning, refTimerRunning;
 	private int rows, columns;
 	protected TextView timerTextView;
-	private int timeLimit = 15000; // drawing time limit in milliseconds
-	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
-	private final int numberOfImages = 7; //number of reference images
+	private int timeLimit = 30000; // drawing time limit in milliseconds
+	private int refTimeLimit = 8000; // reference image display time limit in
+										// milliseconds
+	private final int numberOfImages = 7; // number of reference images
 	private ArrayList<Integer> refImagesList;
 	private boolean[][] refImage;
-	private boolean TESTING = false; //USE 3x3 for testing
-	
+	private boolean TESTING = false; // USE 3x3 for testing
+	private int backpress = 0;
 	private boolean verbose = true;
-	
+
 	SocketApp app;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+//		getActionBar().setTitle("Duel Draw");
+		requestWindowFeature(Window.FEATURE_NO_TITLE); 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_draw);
-		if(TESTING){
-			createPixelGrid(3,3);
-			timeLimit = 3000;  
+		if (TESTING) {
+			createPixelGrid(3, 3);
+			timeLimit = 3000;
 			refTimeLimit = 3000;
-		}
-		else{
-			createPixelGrid(20, 20);	
+		} else {
+			createPixelGrid(20, 20);
 		}
 		timerRunning = false;
 		refTimerRunning = false;
@@ -67,25 +71,25 @@ public class DrawActivity extends Activity {
 	private void getRefImage() {
 		// generate a random number
 		Random rand = new Random();
-		int max = numberOfImages-1; int min = 0;
+		int max = numberOfImages - 1;
+		int min = 0;
 		int randomNum = rand.nextInt((max - min) + 1) + min;
 
-		// access the image 
+		// access the image
 		int refImageIndex = refImagesList.get(randomNum);
 		imageToArray(refImageIndex);
 	}
 
 	private void imageToArray(int refImageIndex) {
 		InputStream is = this.getResources().openRawResource(refImageIndex);
-		Bitmap img = BitmapFactory.decodeStream(is);  
+		Bitmap img = BitmapFactory.decodeStream(is);
 		refImage = new boolean[columns][rows];
 
-		for( int i = 0; i < columns; i++ ) {
-			for( int j = 0; j < rows; j++ ) {
-				if(img.getPixel(i,j) == Color.BLACK ){
+		for (int i = 0; i < columns; i++) {
+			for (int j = 0; j < rows; j++) {
+				if (img.getPixel(i, j) == Color.BLACK) {
 					refImage[i][j] = true;
-				}
-				else{
+				} else {
 					refImage[i][j] = false;
 				}
 			}
@@ -101,27 +105,13 @@ public class DrawActivity extends Activity {
 		pixelGrid.setNumRows(rows);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	/* Set the input mode to Erasing if timer is started */
 	public void setErase(View view) {
 		if (timerRunning) {
 			pixelGrid.setErase(true);
-			if(verbose) Toast.makeText(getApplicationContext(), "Erase", Toast.LENGTH_SHORT)
-				.show();
+			if (verbose)
+				Toast.makeText(getApplicationContext(), "Erase",
+						Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -129,8 +119,9 @@ public class DrawActivity extends Activity {
 	public void setDraw(View view) {
 		if (timerRunning) {
 			pixelGrid.setErase(false);
-			if(verbose) Toast.makeText(getApplicationContext(), "Draw", Toast.LENGTH_SHORT)
-				.show();
+			if (verbose)
+				Toast.makeText(getApplicationContext(), "Draw",
+						Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -158,20 +149,24 @@ public class DrawActivity extends Activity {
 			timerRunning = true;
 			startDrawing();
 			clearGrid(view);
-			if(verbose) Toast.makeText(getApplicationContext(), "Started Timer",
-						   Toast.LENGTH_SHORT).show();
+			if (verbose)
+				Toast.makeText(getApplicationContext(), "Started Timer",
+						Toast.LENGTH_SHORT).show();
 			new CountDownTimer(timeLimit, 1000) {
 
 				public void onTick(long millisUntilFinished) {
-					timerTextView.setText("seconds remaining: "
-										  + millisUntilFinished / 1000);
+					long durationSeconds = millisUntilFinished/1000;
+					String time = String.format("Time Remaining : %02d:%02d", durationSeconds / 60, (durationSeconds % 60));
+					timerTextView.setText(time);
 				}
 
 				public void onFinish() {
-					timerTextView.setText("Done! Click start to draw again.");
+					timerTextView.setText("Done!");
 					int score = calculateScore();
-					if(verbose) Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+ score,
-								   Toast.LENGTH_SHORT).show();
+					if (verbose)
+						Toast.makeText(getApplicationContext(),
+								"Time's Up! Your score = " + score,
+								Toast.LENGTH_SHORT).show();
 					stopDrawing();
 					sendPlayerScore_ProtocolK(score);
 					timerRunning = false;
@@ -181,80 +176,98 @@ public class DrawActivity extends Activity {
 		}
 	}
 
-	public int calculateScore(){
-		boolean[][] drawnImage = pixelGrid.getCellChecked( );
-		double matchingCellCount = 0; double refCheckedCells = 0;
-		double penalty = 1/(double)(rows*columns); double incorrect = 0;
+	public int calculateScore() {
+		boolean[][] drawnImage = pixelGrid.getCellChecked();
+		double matchingCellCount = 0;
+		double refCheckedCells = 0;
+		double penalty = 1 / (double) (rows * columns);
+		double incorrect = 0;
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				if(refImage[i][j]){
+				if (refImage[i][j]) {
 					refCheckedCells++;
 				}
-				if((drawnImage[i][j] == refImage[i][j]) && drawnImage[i][j] == true) {
+				if ((drawnImage[i][j] == refImage[i][j])
+						&& drawnImage[i][j] == true) {
 					matchingCellCount++;
 				}
-				if(drawnImage[i][j]==true && refImage[i][j]==false){
+				if (drawnImage[i][j] == true && refImage[i][j] == false) {
 					incorrect++;
 				}
 			}
 		}
-		double score = (matchingCellCount - (incorrect*penalty))/refCheckedCells;
-		if(TESTING){
+		double score = (matchingCellCount - (incorrect * penalty))
+				/ refCheckedCells;
+		if (TESTING) {
 			Log.i("MATCHING:", Double.toString(matchingCellCount));
 			Log.i("INCORRECT:", Double.toString(incorrect));
-			Log.i("PENALTY:", Double.toString(incorrect*penalty));
+			Log.i("PENALTY:", Double.toString(incorrect * penalty));
 			Log.i("SCORE:", Double.toString(score));
 		}
-		if(score < 0){
+		if (score < 0) {
 			return 0;
 		}
-		return (int)(score*100);
+		return (int) (score * 100);
 	}
 
 	/* Starts the countdown timer to display the reference image */
 	public void startDisplayImageTimer(View view) {
 		if (refTimerRunning) {
 			return;
-		} else{
+		} else {
 			app = (SocketApp) getApplicationContext();
-			if(app.startGame){
+			if (app.startGame) {
 				refTimerRunning = true;
-	
-				if(TESTING){
+
+				if (TESTING) {
 					refImage = new boolean[3][3];
-					for(int i = 0; i<3; i++){
+					for (int i = 0; i < 3; i++) {
 						refImage[i][i] = true;
 					}
-				}
-				else{
+				} else {
 					getRefImage();
 				}
-	
-				pixelGrid.setCellChecked( refImage );
-	
+
+				pixelGrid.setCellChecked(refImage);
+
 				new CountDownTimer(refTimeLimit, 1000) {
-	
+
 					public void onTick(long millisUntilFinished) {
-						timerTextView.setText("Time remaining: "
-											  + millisUntilFinished / 1000);
+						long durationSeconds = millisUntilFinished/1000;
+						String time = String.format("Time Remaining : %02d:%02d", durationSeconds / 60, (durationSeconds % 60));
+						timerTextView.setText(time);
 					}
-	
+
 					public void onFinish() {
 						timerTextView.setText("Start drawing!");
-						if(verbose) Toast.makeText(getApplicationContext(), "Begin!",
-									   Toast.LENGTH_SHORT).show();
-						startDrawingTimer(getWindow().getDecorView().findViewById(android.R.id.content));
+						if (verbose)
+							Toast.makeText(getApplicationContext(), "Begin!",
+									Toast.LENGTH_SHORT).show();
+						startDrawingTimer(getWindow().getDecorView()
+								.findViewById(android.R.id.content));
 					}
 				}.start();
 			}
 		}
 
 	}
-	
+
 	private void sendPlayerScore_ProtocolK(int score) {
 		// TODO Auto-generated method stub
 		app = (SocketApp) getApplicationContext();
 		app.sendMessage("K");
 		app.sendMessage(Integer.toString(score));
+	}
+
+	@Override
+	public void onBackPressed() {
+		backpress = (backpress + 1);
+		Toast.makeText(getApplicationContext(), "Press Back again to Exit",
+				Toast.LENGTH_SHORT).show();
+
+		if (backpress > 1) {
+			super.onBackPressed();
+		}
+
 	}
 }

@@ -42,7 +42,7 @@ public class SocketApp extends Application {
 	}
 
 	public void setPlayerList(String[] playerList) {
-		this.playerList = new ArrayList(Arrays.asList(playerList));
+		this.playerList = new ArrayList<String>(Arrays.asList(playerList));
 	}
 
 	public void onCreate() {
@@ -161,8 +161,7 @@ public class SocketApp extends Application {
 			String msg;
 			if (sock.isConnected()) {
 				msg = "Info: Connection opened successfully";
-//				setupUserData_ProtocolA();
-				requestListOfActivePlayers_ProtocolC();
+				setupUserData_ProtocolA();
 			} else {
 				msg = "Info: Connection could not be opened";
 			}
@@ -205,7 +204,7 @@ public class SocketApp extends Application {
 					Toast.LENGTH_SHORT).show();
 					// check for boolean value whether user connection acknowledged
 //					if((int) str.charAt(1) == 1) 	userInitalConnectionAcknowledge = true;
-					//requestListOfActivePlayers_ProtocolC();
+					requestListOfActivePlayers_ProtocolC();
 					break;
 					
 			case 'D': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
@@ -295,14 +294,12 @@ public class SocketApp extends Application {
 	private void setupUserData_ProtocolA() {
 		sendMessage("A");
 		sendMessage(Secure.getString(getContentResolver(), Secure.ANDROID_ID));
-//		recvMessage();
 	}
 	
 	private void userChallengeResponse_ProtocolI(boolean accept) {
 		sendMessage("I");
 		if (accept)	{	sendMessage("1");	}
 		else { sendMessage("0");	}
-//		recvMessage();
 	}
 
 	
