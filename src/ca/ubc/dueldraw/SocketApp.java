@@ -17,6 +17,7 @@ public class SocketApp extends Application {
 	private String ipAddress = "206.87.135.154";
 	private Integer port = 50002;
 	Socket sock = null;
+	private boolean verbose = true;
 
 	public void onCreate() {
 		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -45,12 +46,13 @@ public class SocketApp extends Application {
 	}
 
 	public void openSocket() {
-		Toast.makeText(getApplicationContext(), "Opening Socket.",
-				Toast.LENGTH_LONG).show();
+		if(verbose){ Toast.makeText(getApplicationContext(), "Info: Opening Socket...",
+				Toast.LENGTH_LONG).show(); }
+		
 		// Make sure the socket is not already opened
 		if (sock != null && sock.isConnected() && !sock.isClosed()) {
-			Toast.makeText(getApplicationContext(), "Socket already open",
-					Toast.LENGTH_SHORT).show();
+			if(verbose){ Toast.makeText(getApplicationContext(), "Info: Socket already open",
+					Toast.LENGTH_SHORT).show();	}
 			return;
 		}
 		new SocketConnect().execute((Void) null);
@@ -61,6 +63,8 @@ public class SocketApp extends Application {
 		try {
 			s.getOutputStream().close();
 			s.close();
+			if(verbose){ Toast.makeText(getApplicationContext(), "Info: Socket closed",
+					Toast.LENGTH_SHORT).show();	}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -87,8 +91,8 @@ public class SocketApp extends Application {
 			e.printStackTrace();
 		}
 		
-		Toast.makeText(getApplicationContext(), "Sending: "+str,
-				Toast.LENGTH_LONG).show();
+		if(verbose){ Toast.makeText(getApplicationContext(), "Sent: " + str,
+				Toast.LENGTH_SHORT).show();	}
 	}
 
 	public void recvMessage() {
@@ -126,14 +130,13 @@ public class SocketApp extends Application {
 
 			String msg;
 			if (sock.isConnected()) {
-				msg = "Connection opened successfully";
+				msg = "Info: Connection opened successfully";
 				setupUserData();
 			} else {
-				msg = "Connection could not be opened";
+				msg = "Info: Connection could not be opened";
 			}
-			Toast t = Toast.makeText(getApplicationContext(), msg,
-					Toast.LENGTH_LONG);
-			t.show();
+			if(verbose){ Toast.makeText(getApplicationContext(), msg,
+					Toast.LENGTH_SHORT).show();	}
 		}
 
 	}
@@ -159,8 +162,8 @@ public class SocketApp extends Application {
 		}
 
 		protected void onPostExecute(String str) {
-			Toast.makeText(getApplicationContext(), "Received: "+ str, Toast.LENGTH_LONG)
-					.show();
+			if(verbose){ Toast.makeText(getApplicationContext(), "Received: " + str,
+					Toast.LENGTH_SHORT).show();	}
 		}
 	}
 	

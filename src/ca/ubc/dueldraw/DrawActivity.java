@@ -1,11 +1,13 @@
 package ca.ubc.dueldraw;
 
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Random;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.Menu;
@@ -22,28 +24,60 @@ public class DrawActivity extends Activity {
 	protected TextView timerTextView;
 	private int timeLimit = 15000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in milliseconds
-	private ArrayList<boolean[][]> refImagesList;
+	private final int numberOfImages = 7; //number of reference images
 	private int refImageIndex;
+	private ArrayList<Integer> refImagesList;
+	private boolean[][] refImage;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_draw);
-		initializeRefImages();
 		createPixelGrid(20, 20);
 		timerRunning = false;
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
+		initializeRefImages();
 	}
 
 	private void initializeRefImages() {
-		// TODO Auto-generated method stub
+		// get image id's from R.java
+		refImagesList = new ArrayList<Integer>();
+		refImagesList.add(R.drawable.android);
+		refImagesList.add(R.drawable.dog);
+		refImagesList.add(R.drawable.flappybird);
+		refImagesList.add(R.drawable.mushroom);
+		refImagesList.add(R.drawable.smiley);
+		refImagesList.add(R.drawable.squares);
+		refImagesList.add(R.drawable.random);
+	}
+	
+	private void getRefImage() {
+		// generate a random number
+		Random rand = new Random();
+		int max = numberOfImages-1; int min = 0;
+		int randomNum = rand.nextInt((max - min) + 1) + min;
 		
-		//initialize images
-		// generate random image list index
+		// access the image 
+		int refImageIndex = refImagesList.get(randomNum);
+		imageToArray(refImageIndex);
+	}
+	
+	private void imageToArray(int refImageIndex) {
+		InputStream is = this.getResources().openRawResource(refImageIndex);
+		Bitmap img = BitmapFactory.decodeStream(is);  
+		refImage = new boolean[columns][rows];
 		
-//		Random r = new Random();
-//		refImageIndex = r.nextInt(refImagesList.size());
+		for( int i = 0; i < columns; i++ ) {
+			for( int j = 0; j < rows; j++ ) {
+			    	if(img.getPixel(i,j) == Color.BLACK ){
+			        	refImage[i][j] = true;
+			        }
+			        else{
+			        	refImage[i][j] = false;
+			        }
+			}
+		}
 	}
 
 	/* initializes a pixelGrid with given dimensions */
@@ -142,19 +176,15 @@ public class DrawActivity extends Activity {
 	
 	public int calculateScore(){
 		boolean[][] drawnImage = pixelGrid.getCellChecked( );
-		int matchingCellCount = 0, cellCheckCountRefImage = 0;
-		boolean[][] refImage = refImagesList.get(refImageIndex);
+		int matchingCellCount = 0;
 		for (int i = 0; i < columns; i++) {
 			for (int j = 0; j < rows; j++) {
-				if(refImage[i][j]){
-					cellCheckCountRefImage++;
-				}
-				if(refImage[i][j] == drawnImage[i][j]) {
+				if(drawnImage[i][j] ==  refImage[i][j]) {
 					matchingCellCount++;
 				}
 			}
 		}
-		return (100*matchingCellCount)/cellCheckCountRefImage;
+		return (100*matchingCellCount)/(rows*columns); //returns percentage of matching pixels
 	}
 	
 	/* Starts the countdown timer to display the reference image */
@@ -164,8 +194,7 @@ public class DrawActivity extends Activity {
 		} else{
 			refTimerRunning = true;
 			
-			//display reference image
-			boolean[][] refImage = refImagesList.get(refImageIndex);
+			getRefImage();
 			pixelGrid.setCellChecked( refImage );
 			
 			new CountDownTimer(refTimeLimit, 1000) {

@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 public class ActivePlayersActivity extends Activity {
 	ListView listView ;
+	String[] values;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class ActivePlayersActivity extends Activity {
                                          "Player 4", 
                                          "Player 5"
                                         };
+        //String[] values = receiveListOfActivePlayers();
         
      // Define a new Adapter
         // First parameter - Context
