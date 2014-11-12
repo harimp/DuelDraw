@@ -33,7 +33,7 @@ public class SocketApp extends Application {
 	
 	boolean userWon = false;
 	boolean userInitalConnectionAcknowledge = false;
-	boolean startGame = false;
+	boolean startGame = true;
 	
 	String opponentID;
 
@@ -201,14 +201,14 @@ public class SocketApp extends Application {
 			 * 								  [1..] Message
 			 */
 			switch(str.charAt(0)){
-			case 'B': Toast.makeText(getApplicationContext(), "Protocol: Connection Acknoledged",
+			case 'B': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Connection Acknoledged",
 					Toast.LENGTH_SHORT).show();
 					// check for boolean value whether user connection acknowledged
 //					if((int) str.charAt(1) == 1) 	userInitalConnectionAcknowledge = true;
 					//requestListOfActivePlayers_ProtocolC();
 					break;
 					
-			case 'D': Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
+			case 'D': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
 					Toast.LENGTH_SHORT).show();
 					// initialize player list based on number of players that are active
 					numberOfActivePlayers = (int) str.charAt(1);
@@ -217,7 +217,7 @@ public class SocketApp extends Application {
 //					if(numberOfActivePlayers > 0)	recvMessage();
 					break;	
 					
-			case 'E': Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
+			case 'E': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
 					// store player info in ArrayList of active players
 					playerList.add(str.substring(1));
@@ -227,13 +227,13 @@ public class SocketApp extends Application {
 //					recvMessage();
 					break;		
 					
-			case 'F': Toast.makeText(getApplicationContext(), "Protocol: End of Player List",
+			case 'F': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: End of Player List",
 					Toast.LENGTH_SHORT).show();
 					// player list is ready if all the active players have been received
 					if(playerList.size() == numberOfActivePlayers) playerListReady = true;
 					break;
 					
-			case 'H': Toast.makeText(getApplicationContext(), "Protocol: Accept Challenge From = " + str.substring(1),
+			case 'H': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Accept Challenge From = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
 					opponentID = str.substring(1);
 					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -265,15 +265,15 @@ public class SocketApp extends Application {
 					// show dialog
 					alertDialog.show();
 					break;
-			case 'J': Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
+			case 'J': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
 					Toast.LENGTH_SHORT).show();
 					startGame = true;
 					break;
-			case 'L': Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
+			case 'L': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
 					Toast.LENGTH_SHORT).show();
 					if((int) str.charAt(1) == 1) userWon = true;
 					break;
-			default: Toast.makeText(getApplicationContext(), "Protocol: Invalid!",
+			default: if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Invalid!",
 					Toast.LENGTH_SHORT).show();
 					break;
 				

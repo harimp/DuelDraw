@@ -30,6 +30,8 @@ public class DrawActivity extends Activity {
 	private boolean[][] refImage;
 	private boolean TESTING = false; //USE 3x3 for testing
 	
+	private boolean verbose = true;
+	
 	SocketApp app;
 
 	@Override
@@ -118,7 +120,7 @@ public class DrawActivity extends Activity {
 	public void setErase(View view) {
 		if (timerRunning) {
 			pixelGrid.setErase(true);
-			Toast.makeText(getApplicationContext(), "Erase", Toast.LENGTH_SHORT)
+			if(verbose) Toast.makeText(getApplicationContext(), "Erase", Toast.LENGTH_SHORT)
 				.show();
 		}
 	}
@@ -127,7 +129,7 @@ public class DrawActivity extends Activity {
 	public void setDraw(View view) {
 		if (timerRunning) {
 			pixelGrid.setErase(false);
-			Toast.makeText(getApplicationContext(), "Draw", Toast.LENGTH_SHORT)
+			if(verbose) Toast.makeText(getApplicationContext(), "Draw", Toast.LENGTH_SHORT)
 				.show();
 		}
 	}
@@ -142,7 +144,7 @@ public class DrawActivity extends Activity {
 
 	/* TODO: Save the pixelGrid to a file */
 	public void saveImage(View view) {
-		Toast.makeText(getApplicationContext(), "Image Saved to Gallery",
+		if(verbose) Toast.makeText(getApplicationContext(), "Image Saved to Gallery",
 					   Toast.LENGTH_SHORT).show();
 		pixelGrid.getCellChecked();
 	}
@@ -163,7 +165,7 @@ public class DrawActivity extends Activity {
 			timerRunning = true;
 			startDrawing();
 			clearGrid(view);
-			Toast.makeText(getApplicationContext(), "Started Timer",
+			if(verbose) Toast.makeText(getApplicationContext(), "Started Timer",
 						   Toast.LENGTH_SHORT).show();
 			new CountDownTimer(timeLimit, 1000) {
 
@@ -175,7 +177,7 @@ public class DrawActivity extends Activity {
 				public void onFinish() {
 					timerTextView.setText("Done! Click start to draw again.");
 					int score = calculateScore();
-					Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+ score,
+					if(verbose) Toast.makeText(getApplicationContext(), "Time's Up! Your score = "+ score,
 								   Toast.LENGTH_SHORT).show();
 					stopDrawing();
 					sendPlayerScore_ProtocolK(score);
@@ -246,7 +248,7 @@ public class DrawActivity extends Activity {
 	
 					public void onFinish() {
 						timerTextView.setText("Start drawing!");
-						Toast.makeText(getApplicationContext(), "Begin!",
+						if(verbose) Toast.makeText(getApplicationContext(), "Begin!",
 									   Toast.LENGTH_SHORT).show();
 						startDrawingTimer(getWindow().getDecorView().findViewById(android.R.id.content));
 					}
