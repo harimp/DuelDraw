@@ -22,7 +22,7 @@ import android.provider.Settings.Secure;
 import android.widget.Toast;
 
 public class SocketApp extends Application {
-	private String ipAddress = "206.87.128.112";
+	private String ipAddress = "128.189.88.255";
 	private Integer port = 50002;
 	Socket sock = null;
 	private boolean verbose = true;
@@ -34,7 +34,8 @@ public class SocketApp extends Application {
 	
 	boolean userWon = false;
 	boolean userInitalConnectionAcknowledge = false;
-	boolean startGame = true;
+	boolean startGame = false;
+	int refImageID;
 	
 	String opponentID;
 
@@ -198,7 +199,7 @@ public class SocketApp extends Application {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			str = "H1234567890";
+			str = "J2";
 			return str;
 		}
 
@@ -246,6 +247,9 @@ public class SocketApp extends Application {
 			case 'J': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
 					Toast.LENGTH_SHORT).show();
 					startGame = true;
+					refImageID = Character.getNumericValue(str.charAt(1));
+					if(verbose) Toast.makeText(getApplicationContext(), "RefImageID = "+refImageID,
+							Toast.LENGTH_SHORT).show();
 					break;
 			case 'L': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Match Complete Result",
 					Toast.LENGTH_SHORT).show();

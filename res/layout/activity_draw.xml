@@ -35,13 +35,7 @@
             android:onClick="setErase"
             android:text="@string/erase" />
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.25"
-            android:onClick="startDisplayImageTimer"
-            android:text="@string/start" />
+
 
         <Button
             android:id="@+id/button5"

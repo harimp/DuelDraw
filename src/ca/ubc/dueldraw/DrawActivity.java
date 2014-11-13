@@ -54,6 +54,7 @@ public class DrawActivity extends Activity {
 		refTimerRunning = false;
 		timerTextView = (TextView) findViewById(R.id.timerTextView);
 		initializeRefImages();
+		startDisplayImageTimer(getWindow().getDecorView().findViewById(android.R.id.content));
 	}
 
 	private void initializeRefImages() {
@@ -66,19 +67,22 @@ public class DrawActivity extends Activity {
 		refImagesList.add(R.drawable.smiley);
 		refImagesList.add(R.drawable.squares);
 		refImagesList.add(R.drawable.random);
+		if(verbose) Toast.makeText(getApplicationContext(), "RefImageList size = "+refImagesList.size(),
+				Toast.LENGTH_SHORT).show();
 	}
 
-	private void getRefImage() {
-		// generate a random number
-		Random rand = new Random();
-		int max = numberOfImages - 1;
-		int min = 0;
-		int randomNum = rand.nextInt((max - min) + 1) + min;
-
-		// access the image
-		int refImageIndex = refImagesList.get(randomNum);
-		imageToArray(refImageIndex);
-	}
+//	private void getRefImage() {
+//		// generate a random number
+//		Random rand = new Random();
+//		int max = numberOfImages - 1;
+//		int min = 0;
+//		int randomNum = rand.nextInt((max - min) + 1) + min;
+//
+//		// access the image
+//		int refImageIndex = refImagesList.get(randomNum);
+//		imageToArray(refImageIndex);
+//	}
+	
 
 	private void imageToArray(int refImageIndex) {
 		InputStream is = this.getResources().openRawResource(refImageIndex);
@@ -226,7 +230,7 @@ public class DrawActivity extends Activity {
 						refImage[i][i] = true;
 					}
 				} else {
-					getRefImage();
+					imageToArray(refImagesList.get(app.refImageID));
 				}
 
 				pixelGrid.setCellChecked(refImage);
