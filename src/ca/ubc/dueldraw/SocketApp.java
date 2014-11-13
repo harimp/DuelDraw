@@ -30,6 +30,7 @@ public class SocketApp extends Application {
 	private ArrayList<String> playerList;
 	private int numberOfActivePlayers;
 	boolean playerListReady = false;
+	int count = 1;
 	
 	boolean userWon = false;
 	boolean userInitalConnectionAcknowledge = false;
@@ -203,19 +204,16 @@ public class SocketApp extends Application {
 			switch(str.charAt(0)){
 			case 'C': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
 					Toast.LENGTH_SHORT).show();
-					numberOfActivePlayers = (int) str.charAt(1);
-					requestPlayerNames_ProtocolD(numberOfActivePlayers);
+					numberOfActivePlayers = (int) (str.charAt(1) - '0');
+					requestPlayerName();
 					break;	
 					
 			case 'D': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
-//					// store player info in ArrayList of active players
-//					String temp[] = (str.substring(1)).split(",");
-//					for(String t: temp){
-//						playerList.add(t);
-//					}
 					playerList.add(str.substring(1));
 					System.out.println("Added to list: " + str.substring(1));
+					if(count <= numberOfActivePlayers)
+						requestPlayerName();
 //					requestNextMessageY();
 					// listen for more players to be sent
 //					recvMessage();
@@ -278,10 +276,9 @@ public class SocketApp extends Application {
 
 	}
 	
-	private void requestPlayerNames_ProtocolD(int number) {
-		for(int i=1;i<=number;i++){
-			sendMessage("D"+number);
-		}
+	private void requestPlayerName() {	
+			sendMessage("D"+count);
+			count++;
 	}
 	
 	private void requestListOfActivePlayers_ProtocolC() {

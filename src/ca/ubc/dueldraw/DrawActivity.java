@@ -38,10 +38,10 @@ public class DrawActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().setTitle("Duel Draw");
-		requestWindowFeature(Window.FEATURE_NO_TITLE); 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		// getActionBar().setTitle("Duel Draw");
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_draw);
 		if (TESTING) {
 			createPixelGrid(3, 3);
@@ -155,8 +155,9 @@ public class DrawActivity extends Activity {
 			new CountDownTimer(timeLimit, 1000) {
 
 				public void onTick(long millisUntilFinished) {
-					long durationSeconds = millisUntilFinished/1000;
-					String time = String.format("Time Remaining : %02d:%02d", durationSeconds / 60, (durationSeconds % 60));
+					long durationSeconds = millisUntilFinished / 1000;
+					String time = String.format("Time Remaining : %02d:%02d",
+							durationSeconds / 60, (durationSeconds % 60));
 					timerTextView.setText(time);
 				}
 
@@ -233,8 +234,10 @@ public class DrawActivity extends Activity {
 				new CountDownTimer(refTimeLimit, 1000) {
 
 					public void onTick(long millisUntilFinished) {
-						long durationSeconds = millisUntilFinished/1000;
-						String time = String.format("Time Remaining : %02d:%02d", durationSeconds / 60, (durationSeconds % 60));
+						long durationSeconds = millisUntilFinished / 1000;
+						String time = String.format(
+								"Time Remaining : %02d:%02d",
+								durationSeconds / 60, (durationSeconds % 60));
 						timerTextView.setText(time);
 					}
 
@@ -255,8 +258,7 @@ public class DrawActivity extends Activity {
 	private void sendPlayerScore_ProtocolK(int score) {
 		// TODO Auto-generated method stub
 		app = (SocketApp) getApplicationContext();
-		app.sendMessage("K");
-		app.sendMessage(Integer.toString(score));
+		app.sendMessage("K" + Integer.toString(score));
 	}
 
 	@Override
