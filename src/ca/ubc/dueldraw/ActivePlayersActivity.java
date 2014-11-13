@@ -36,7 +36,7 @@ public class ActivePlayersActivity extends Activity {
                                          "Player 5"
                                         };
         app = (SocketApp) getApplicationContext();
-        app.setPlayerList(values);
+//        app.setPlayerList(values);
         if(app.playerListReady)	values = app.getPlayerList();
         
         // Setup adapter for ListViews

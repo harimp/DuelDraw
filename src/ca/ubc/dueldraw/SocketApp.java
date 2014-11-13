@@ -25,7 +25,7 @@ public class SocketApp extends Application {
 	private String ipAddress = "128.189.93.239";
 	private Integer port = 50002;
 	Socket sock = null;
-	private boolean verbose = false;
+	private boolean verbose = true;
 	
 	private ArrayList<String> playerList;
 	private int numberOfActivePlayers;
@@ -68,7 +68,7 @@ public class SocketApp extends Application {
 		openSocket();
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
         Timer tcp_timer = new Timer();
-        tcp_timer.schedule(tcp_task, 0, 100);
+        tcp_timer.schedule(tcp_task, 0, 10);
 	}
 
 	public void onDestroy() {
@@ -162,6 +162,7 @@ public class SocketApp extends Application {
 			if (sock.isConnected()) {
 				msg = "Info: Connection opened successfully";
 				setupUserData_ProtocolA();
+				requestListOfActivePlayers_ProtocolC();
 			} else {
 				msg = "Info: Connection could not be opened";
 			}
@@ -193,35 +194,29 @@ public class SocketApp extends Application {
 
 		protected void onPostExecute(String str) {
 		if( str != null ) {
-			if(verbose) Toast.makeText(getApplicationContext(), "Received: " + str,
-					Toast.LENGTH_SHORT).show();
+//			if(verbose) Toast.makeText(getApplicationContext(), "Received: " + str,
+//					Toast.LENGTH_SHORT).show();
 			
 			/* Structure of message from DE2: [0] Protocol ID (A,B,P,etc)
 			 * 								  [1..] Message
 			 */
 			switch(str.charAt(0)){
-			case 'B': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Connection Acknoledged",
+			case 'C': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
 					Toast.LENGTH_SHORT).show();
-					// check for boolean value whether user connection acknowledged
-//					if((int) str.charAt(1) == 1) 	userInitalConnectionAcknowledge = true;
-					requestListOfActivePlayers_ProtocolC();
-					break;
-					
-			case 'D': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Number of Players in List Received = " + str.charAt(1),
-					Toast.LENGTH_SHORT).show();
-					// initialize player list based on number of players that are active
 					numberOfActivePlayers = (int) str.charAt(1);
-					requestNextMessage();
-					// listen for players list to be sent one by one
-//					if(numberOfActivePlayers > 0)	recvMessage();
+					requestPlayerNames_ProtocolD(numberOfActivePlayers);
 					break;	
 					
-			case 'E': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
+			case 'D': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Player Name = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
-					// store player info in ArrayList of active players
+//					// store player info in ArrayList of active players
+//					String temp[] = (str.substring(1)).split(",");
+//					for(String t: temp){
+//						playerList.add(t);
+//					}
 					playerList.add(str.substring(1));
 					System.out.println("Added to list: " + str.substring(1));
-					requestNextMessage();
+//					requestNextMessageY();
 					// listen for more players to be sent
 //					recvMessage();
 					break;		
@@ -272,7 +267,7 @@ public class SocketApp extends Application {
 					Toast.LENGTH_SHORT).show();
 					if((int) str.charAt(1) == 1) userWon = true;
 					break;
-			default: if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Invalid!",
+			default: if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Invalid! = " + str,
 					Toast.LENGTH_SHORT).show();
 					break;
 				
@@ -283,6 +278,12 @@ public class SocketApp extends Application {
 
 	}
 	
+	private void requestPlayerNames_ProtocolD(int number) {
+		for(int i=1;i<=number;i++){
+			sendMessage("D"+number);
+		}
+	}
+	
 	private void requestListOfActivePlayers_ProtocolC() {
 		sendMessage("C");
 	}
@@ -291,9 +292,12 @@ public class SocketApp extends Application {
 		sendMessage("X");
 	}
 	
+	private void requestNextMessageY() {
+		sendMessage("Y");
+	}
+	
 	private void setupUserData_ProtocolA() {
-		sendMessage("A");
-		sendMessage(Secure.getString(getContentResolver(), Secure.ANDROID_ID));
+		sendMessage("A" + Secure.getString(getContentResolver(), Secure.ANDROID_ID));
 	}
 	
 	private void userChallengeResponse_ProtocolI(boolean accept) {
