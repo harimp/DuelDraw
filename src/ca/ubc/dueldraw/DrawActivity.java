@@ -38,7 +38,6 @@ public class DrawActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		// getActionBar().setTitle("Duel Draw");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -71,21 +70,14 @@ public class DrawActivity extends Activity {
 				Toast.LENGTH_SHORT).show();
 	}
 
-//	private void getRefImage() {
-//		// generate a random number
-//		Random rand = new Random();
-//		int max = numberOfImages - 1;
-//		int min = 0;
-//		int randomNum = rand.nextInt((max - min) + 1) + min;
-//
-//		// access the image
-//		int refImageIndex = refImagesList.get(randomNum);
-//		imageToArray(refImageIndex);
-//	}
+	private void getRefImage() {
+		int refImageResource = refImagesList.get(app.refImageID);
+		imageToArray(refImageResource);
+	}
 	
 
-	private void imageToArray(int refImageIndex) {
-		InputStream is = this.getResources().openRawResource(refImageIndex);
+	private void imageToArray(int refImageResource) {
+		InputStream is = this.getResources().openRawResource(refImageResource);
 		Bitmap img = BitmapFactory.decodeStream(is);
 		refImage = new boolean[columns][rows];
 
@@ -98,6 +90,8 @@ public class DrawActivity extends Activity {
 				}
 			}
 		}
+		pixelGrid.setCellChecked(refImage);
+
 	}
 
 	/* initializes a pixelGrid with given dimensions */
@@ -230,19 +224,24 @@ public class DrawActivity extends Activity {
 						refImage[i][i] = true;
 					}
 				} else {
-					imageToArray(refImagesList.get(app.refImageID));
+					getRefImage();
 				}
 
-				pixelGrid.setCellChecked(refImage);
-
 				new CountDownTimer(refTimeLimit, 1000) {
-
+					
 					public void onTick(long millisUntilFinished) {
 						long durationSeconds = millisUntilFinished / 1000;
+						if(durationSeconds == 7) {
+							timerTextView.setText("Preparing Image");
+						}
+						else {
 						String time = String.format(
 								"Time Remaining : %02d:%02d",
 								durationSeconds / 60, (durationSeconds % 60));
-						timerTextView.setText(time);
+							timerTextView.setText(time);
+						}
+						pixelGrid.setCellChecked(refImage);
+						
 					}
 
 					public void onFinish() {
