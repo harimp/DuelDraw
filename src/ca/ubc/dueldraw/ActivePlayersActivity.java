@@ -14,13 +14,13 @@ import android.widget.ListView;
 
 public class ActivePlayersActivity extends Activity {
 	ListView listView ;
+	int numberOfPlayers;
 	String[] values;
 	SocketApp app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().setTitle("Duel Draw");  
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -29,15 +29,8 @@ public class ActivePlayersActivity extends Activity {
         listView = (ListView) findViewById(R.id.list);
         
         // Defined Array values to show in ListView
-        String[] values = new String[] { "Player 1", 
-                                         "Player 2",
-                                         "Player 3",
-                                         "Player 4", 
-                                         "Player 5"
-                                        };
+        values = getIntent().getStringArrayExtra("playerNames");
         app = (SocketApp) getApplicationContext();
-//        app.setPlayerList(values);
-        if(app.playerListReady)	values = app.getPlayerList();
         
         // Setup adapter for ListViews
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -78,9 +71,8 @@ public class ActivePlayersActivity extends Activity {
 	
  	private void requestChallenge_ProtocolG(String opponentID){
 		app = (SocketApp) getApplicationContext();
-		app.sendMessage("G");
-		app.sendMessage(opponentID);
+		app.sendMessage("G" + opponentID);
 		app.opponentID = opponentID;
-//		app.recvMessage(); //get acknowledgement code 8
+		//app.recvMessage(); //get acknowledgement code 8
 	}
 }
