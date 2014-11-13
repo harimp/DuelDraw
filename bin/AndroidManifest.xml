@@ -45,6 +45,11 @@
             android:label="@string/logo"
             android:screenOrientation="portrait" >
         </activity>
+                <activity
+            android:name=".GameResultActivity"
+            android:label="@string/logo"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

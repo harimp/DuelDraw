@@ -167,7 +167,8 @@ public class DrawActivity extends Activity {
 								"Time's Up! Your score = " + score,
 								Toast.LENGTH_SHORT).show();
 					stopDrawing();
-					sendPlayerScore_ProtocolK(score);
+					app = (SocketApp) getApplicationContext();
+					app.sendMessage("K" + Integer.toString(score)); //send score
 					timerRunning = false;
 					refTimerRunning = false;
 				}
@@ -215,7 +216,6 @@ public class DrawActivity extends Activity {
 			return;
 		} else {
 			app = (SocketApp) getApplicationContext();
-			if (app.startGame) {
 				refTimerRunning = true;
 
 				if (TESTING) {
@@ -254,14 +254,7 @@ public class DrawActivity extends Activity {
 					}
 				}.start();
 			}
-		}
 
-	}
-
-	private void sendPlayerScore_ProtocolK(int score) {
-		// TODO Auto-generated method stub
-		app = (SocketApp) getApplicationContext();
-		app.sendMessage("K" + Integer.toString(score));
 	}
 
 	@Override

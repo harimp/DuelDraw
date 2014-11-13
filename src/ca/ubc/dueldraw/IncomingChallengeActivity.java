@@ -1,6 +1,7 @@
 package ca.ubc.dueldraw;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,34 +11,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class IncomingChallengeActivity extends Activity {
-	String incomingID = "";
+	ProgressDialog pd;
+	SocketApp app;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		app = (SocketApp) getApplicationContext();
+		
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		incomingID = getIntent().getStringExtra("opponentID");
 		setContentView(R.layout.activity_incoming_challenge);
-		Toast.makeText(getApplicationContext(), incomingID, Toast.LENGTH_SHORT)
-				.show();
 		TextView tv = (TextView) findViewById(R.id.opponentID);
-		tv.setText(incomingID);
+		tv.setText(app.opponentID);
 	}
 
 	public void acceptChallenge(View view) {
-		// Do something in response to button
-		SocketApp app = (SocketApp) getApplicationContext();
-		app.sendMessage("I1");
-		Intent intent = new Intent(this, DrawActivity.class);
-		this.finish();
-		startActivity(intent);
+		app.sendMessage("I1");	//accept challenge
+		
+		pd = ProgressDialog.show(IncomingChallengeActivity.this, "Challenge Accepted",
+     			  "Waiting for Game to Begin", true);
+     	
+         	new Thread(new Runnable() {
+         		  @Override
+         		  public void run()
+         		  {
+         		    // wait for game start ping from DE2
+         			while(!app.startGame);
+         			app.startGame = false;
+         		    runOnUiThread(new Runnable() {
+         		      @Override
+         		      public void run()
+         		      {
+         		        pd.dismiss();
+         		      }
+         		    });
+         		  }
+         		}).start();
 	}
 
 	public void rejectChallenge(View view) {
-		SocketApp app = (SocketApp) getApplicationContext();
-		app.sendMessage("I0");
+		app.sendMessage("I0");	//reject challenge
 		Intent intent = new Intent(this, MenuActivity.class);
 		startActivity(intent);
 		this.finish();

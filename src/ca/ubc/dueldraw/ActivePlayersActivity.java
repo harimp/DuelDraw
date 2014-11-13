@@ -1,6 +1,7 @@
 package ca.ubc.dueldraw;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -16,11 +17,11 @@ public class ActivePlayersActivity extends Activity {
 	ListView listView ;
 	String[] values;
 	SocketApp app;
+	ProgressDialog pd;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getActionBar().setTitle("Duel Draw");  
 		requestWindowFeature(Window.FEATURE_NO_TITLE); 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -28,16 +29,18 @@ public class ActivePlayersActivity extends Activity {
 		// Get ListView object from xml
         listView = (ListView) findViewById(R.id.list);
         
-        // Defined Array values to show in ListView
-        String[] values = new String[] { "Player 1", 
-                                         "Player 2",
-                                         "Player 3",
-                                         "Player 4", 
-                                         "Player 5"
-                                        };
+
         app = (SocketApp) getApplicationContext();
-//        app.setPlayerList(values);
-        if(app.playerListReady)	values = app.getPlayerList();
+        if(app.playerListReady){
+        	values = app.getPlayerList();
+        }else {
+        	values = new String[] { "Player 1", 
+                    "Player 2",
+                    "Player 3",
+                    "Player 4", 
+                    "Player 5"
+                   };
+        }
         
         // Setup adapter for ListViews
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -49,17 +52,32 @@ public class ActivePlayersActivity extends Activity {
            public void onItemClick(AdapterView<?> adapter, View v, int position,
                  long arg3) 
            {
-                 String opponentID = (String)adapter.getItemAtPosition(position); 
-                 System.out.println(opponentID);
-                 // assuming string and if you want to get the value on click of list item
-                 // do what you intend to do on click of listview row
+                String opponentSelected = (String)adapter.getItemAtPosition(position); 
+                app.opponentID = opponentSelected; //set opponentID in application class
                  
-             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
-             	//intent.putExtra("playerNumber",value);
              	
-             	requestChallenge_ProtocolG(opponentID);
- 
-            	startActivity(intent);
+             	
+             	app.sendMessage("G"+app.opponentID);	// send challenge
+             	
+             	pd = ProgressDialog.show(ActivePlayersActivity.this, "Challenge Sent",
+             			  "Waiting for Opponent to Accept", true);
+             	
+  	           	new Thread(new Runnable() {
+  	           		  @Override
+  	           		  public void run()
+  	           		  {
+  	           		    // wait for game start ping from DE2
+  	           			while(!app.startGame);
+  	           			app.startGame = false;
+  	           		    runOnUiThread(new Runnable() {
+  	           		      @Override
+  	           		      public void run()
+  	           		      {
+  	           		        pd.dismiss();
+  	           		      }
+  	           		    });
+  	           		  }
+  	           		}).start();
            }
         });
 	}
@@ -74,13 +92,5 @@ public class ActivePlayersActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
- 	private void requestChallenge_ProtocolG(String opponentID){
-		app = (SocketApp) getApplicationContext();
-		app.sendMessage("G");
-		app.sendMessage(opponentID);
-		app.opponentID = opponentID;
-//		app.recvMessage(); //get acknowledgement code 8
 	}
 }
