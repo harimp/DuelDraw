@@ -36,6 +36,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name=".IncomingChallengeActivity"
+            android:label="@string/logo"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name=".DrawActivity"
             android:label="@string/logo"
             android:screenOrientation="portrait" >

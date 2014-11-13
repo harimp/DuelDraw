@@ -22,7 +22,7 @@ import android.provider.Settings.Secure;
 import android.widget.Toast;
 
 public class SocketApp extends Application {
-	private String ipAddress = "128.189.93.239";
+	private String ipAddress = "206.87.128.112";
 	private Integer port = 50002;
 	Socket sock = null;
 	private boolean verbose = true;
@@ -67,9 +67,10 @@ public class SocketApp extends Application {
 //			 e.printStackTrace();
 //		 }
 		openSocket();
-		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
-        Timer tcp_timer = new Timer();
-        tcp_timer.schedule(tcp_task, 0, 10);
+		recvMessage();
+//		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
+//        Timer tcp_timer = new Timer();
+//        tcp_timer.schedule(tcp_task, 0, 10);
 	}
 
 	public void onDestroy() {
@@ -177,19 +178,27 @@ public class SocketApp extends Application {
 
 		protected String doInBackground(Void... arg0) {
 			String str = null;
+//			try {
+//				InputStream in = sock.getInputStream();
+//				// See if any bytes are available from the Middleman
+//				int bytes_avail = in.available();
+//				if (bytes_avail > 0) {
+//					// If so, read them in and create a sring
+//					byte buf[] = new byte[bytes_avail];
+//					in.read(buf);
+//					str = new String(buf, 0, bytes_avail, "US-ASCII");
+//				}
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+			
 			try {
-				InputStream in = sock.getInputStream();
-				// See if any bytes are available from the Middleman
-				int bytes_avail = in.available();
-				if (bytes_avail > 0) {
-					// If so, read them in and create a sring
-					byte buf[] = new byte[bytes_avail];
-					in.read(buf);
-					str = new String(buf, 0, bytes_avail, "US-ASCII");
-				}
-			} catch (IOException e) {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			str = "H1234567890";
 			return str;
 		}
 
@@ -227,35 +236,12 @@ public class SocketApp extends Application {
 					
 			case 'H': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Accept Challenge From = " + str.substring(1),
 					Toast.LENGTH_SHORT).show();
+					Intent myIntent = new Intent(getApplicationContext(), IncomingChallengeActivity.class);
+					myIntent.putExtra("opponentID", str.substring(1));
+					myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					myIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+					getApplicationContext().startActivity(myIntent);
 					opponentID = str.substring(1);
-					AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-							getApplicationContext());
-					// set title
-					alertDialogBuilder.setTitle("Challenge!");			 
-					// set dialog message
-					alertDialogBuilder
-						.setMessage("You have been challenged by "+opponentID)
-						.setCancelable(false)
-						.setPositiveButton("Accept",new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,int id) {
-								// if this button is clicked, open new activity
-								userChallengeResponse_ProtocolI(true);
-				             	Intent intent = new Intent(getApplicationContext(), DrawActivity.class);
-				             	startActivity(intent);
-							}
-						  })
-						.setNegativeButton("Deny",new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog,int id) {
-								// if this button is clicked, just close
-								// the dialog box and do nothing
-								userChallengeResponse_ProtocolI(false);
-								dialog.cancel();
-							}
-						});
-					// create alert dialog
-					AlertDialog alertDialog = alertDialogBuilder.create();
-					// show dialog
-					alertDialog.show();
 					break;
 			case 'J': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: Ping to Begin Match",
 					Toast.LENGTH_SHORT).show();
@@ -285,25 +271,10 @@ public class SocketApp extends Application {
 		sendMessage("C");
 	}
 	
-	private void requestNextMessage() {
-		sendMessage("X");
-	}
-	
-	private void requestNextMessageY() {
-		sendMessage("Y");
-	}
-	
 	private void setupUserData_ProtocolA() {
 		sendMessage("A" + Secure.getString(getContentResolver(), Secure.ANDROID_ID));
 	}
-	
-	private void userChallengeResponse_ProtocolI(boolean accept) {
-		sendMessage("I");
-		if (accept)	{	sendMessage("1");	}
-		else { sendMessage("0");	}
-	}
-
-	
+		
 	public class TCPReadTimerTask extends TimerTask {
 		public void run() {
              	new Thread(new Runnable(){
