@@ -22,7 +22,7 @@ import android.provider.Settings.Secure;
 import android.widget.Toast;
 
 public class SocketApp extends Application {
-	private String ipAddress = "128.189.88.255";
+	private String ipAddress = "192.168.1.129";
 	private Integer port = 50002;
 	Socket sock = null;
 	private boolean verbose = true;
@@ -33,7 +33,6 @@ public class SocketApp extends Application {
 	int countPlayersReceived = 1;
 	
 	boolean userWon = false;
-	boolean userInitalConnectionAcknowledge = false;
 	boolean startGame = false;
 	int refImageID;
 	
@@ -60,10 +59,10 @@ public class SocketApp extends Application {
 //			 e.printStackTrace();
 //		 }
 		openSocket();
-		recvMessage();
-//		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
-//        Timer tcp_timer = new Timer();
-//        tcp_timer.schedule(tcp_task, 0, 10);
+//		recvMessage();
+		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
+        Timer tcp_timer = new Timer();
+        tcp_timer.schedule(tcp_task, 0, 10);
 	}
 	
 
@@ -172,27 +171,27 @@ public class SocketApp extends Application {
 
 		protected String doInBackground(Void... arg0) {
 			String str = null;
-//			try {
-//				InputStream in = sock.getInputStream();
-//				// See if any bytes are available from the Middleman
-//				int bytes_avail = in.available();
-//				if (bytes_avail > 0) {
-//					// If so, read them in and create a sring
-//					byte buf[] = new byte[bytes_avail];
-//					in.read(buf);
-//					str = new String(buf, 0, bytes_avail, "US-ASCII");
-//				}
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-			
 			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				InputStream in = sock.getInputStream();
+				// See if any bytes are available from the Middleman
+				int bytes_avail = in.available();
+				if (bytes_avail > 0) {
+					// If so, read them in and create a sring
+					byte buf[] = new byte[bytes_avail];
+					in.read(buf);
+					str = new String(buf, 0, bytes_avail, "US-ASCII");
+				}
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			str = "J1";
+			
+//			try {
+//				Thread.sleep(5000);
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			str = "L0";
 			return str;
 		}
 
@@ -216,7 +215,7 @@ public class SocketApp extends Application {
 						Toast.LENGTH_SHORT).show();
 						playerList.add(str.substring(1));
 						System.out.println("Added to list: " + str.substring(1));
-						if(countPlayersReceived < numberOfActivePlayers)
+						if(countPlayersReceived <= numberOfActivePlayers)
 							sendMessage("D"+countPlayersReceived++);
 						else
 							playerListReady = true;
