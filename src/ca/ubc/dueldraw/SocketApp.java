@@ -47,19 +47,19 @@ public class SocketApp extends Application {
 		/**
 		 * Code to convert URL into IP
 		 */
-//		 try {
-//			 InetAddress address =
-//			 InetAddress.getByName("middleman.redirectme.net");
-//			 String temp = address.toString();
-//			 ipAddress = temp.substring(temp.indexOf("/")+1,temp.length());
-//			 Toast.makeText(getApplicationContext(), ipAddress,
-//			 Toast.LENGTH_SHORT).show();
-//		 }catch (UnknownHostException e) {
-//			 // TODO Auto-generated catch block
-//			 e.printStackTrace();
-//		 }
+		 try {
+			 InetAddress address =
+			 InetAddress.getByName("hpark.ddns.net");
+			 String temp = address.toString();
+			 ipAddress = temp.substring(temp.indexOf("/")+1,temp.length());
+			 Toast.makeText(getApplicationContext(), ipAddress,
+			 Toast.LENGTH_SHORT).show();
+		 }catch (UnknownHostException e) {
+			 // TODO Auto-generated catch block
+			 e.printStackTrace();
+		 }
 		openSocket();
-//		recvMessage();
+
 		TCPReadTimerTask tcp_task = new TCPReadTimerTask();
         Timer tcp_timer = new Timer();
         tcp_timer.schedule(tcp_task, 0, 10);
