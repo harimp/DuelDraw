@@ -12,14 +12,14 @@ public class ImageData {
 
 	// distance measurements from center
 	private int center;
-	private double left;
-	private double right;
-	private double up;
-	private double down;
-	private double SW;
-	private double NW;
-	private double NE;
-	private double SE;
+	private double left = 0;
+	private double right = 0;
+	private double up = 0;
+	private double down = 0;
+	private double SW = 0;
+	private double NW = 0;
+	private double NE = 0;
+	private double SE = 0;
 
 	private boolean VERBOSE = true;
 
