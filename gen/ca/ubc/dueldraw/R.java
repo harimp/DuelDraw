@@ -28,38 +28,48 @@ public final class R {
     }
     public static final class drawable {
         public static final int android=0x7f020000;
-        public static final int brush=0x7f020001;
-        public static final int dog=0x7f020002;
-        public static final int dueldrawicon=0x7f020003;
-        public static final int dueldrawtext=0x7f020004;
-        public static final int eraser=0x7f020005;
-        public static final int flappybird=0x7f020006;
-        public static final int ic_action_name=0x7f020007;
-        public static final int mushroom=0x7f020008;
-        public static final int new_pic=0x7f020009;
-        public static final int random=0x7f02000a;
-        public static final int save=0x7f02000b;
-        public static final int smiley=0x7f02000c;
-        public static final int squares=0x7f02000d;
+        public static final int androidhead=0x7f020001;
+        public static final int brush=0x7f020002;
+        public static final int circle=0x7f020003;
+        public static final int dog=0x7f020004;
+        public static final int dueldrawicon=0x7f020005;
+        public static final int dueldrawtext=0x7f020006;
+        public static final int eraser=0x7f020007;
+        public static final int flappybird=0x7f020008;
+        public static final int heart=0x7f020009;
+        public static final int ic_action_name=0x7f02000a;
+        public static final int mushroom=0x7f02000b;
+        public static final int new_pic=0x7f02000c;
+        public static final int random=0x7f02000d;
+        public static final int save=0x7f02000e;
+        public static final int smiley=0x7f02000f;
+        public static final int square=0x7f020010;
+        public static final int squares=0x7f020011;
+        public static final int star=0x7f020012;
+        public static final int triangle=0x7f020013;
     }
     public static final class id {
-        public static final int acceptButton=0x7f0a000c;
-        public static final int action_settings=0x7f0a0010;
+        public static final int acceptButton=0x7f0a0010;
+        public static final int action_settings=0x7f0a0014;
+        public static final int button1=0x7f0a000d;
         public static final int clearButton=0x7f0a0004;
         public static final int drawButton=0x7f0a0002;
         public static final int eraseButton=0x7f0a0003;
-        public static final int imageView1=0x7f0a000e;
-        public static final int imageView2=0x7f0a000f;
-        public static final int incomingChallengeTextView=0x7f0a0006;
+        public static final int finalScoreTextView=0x7f0a0009;
+        public static final int imageView1=0x7f0a0012;
+        public static final int imageView2=0x7f0a0013;
+        public static final int incomingChallengeTextView=0x7f0a000e;
         public static final int list=0x7f0a0000;
-        public static final int opponentID=0x7f0a000b;
+        public static final int opponentID=0x7f0a000f;
         public static final int pixelGridView1=0x7f0a0005;
-        public static final int refImage=0x7f0a0008;
-        public static final int rejectButton=0x7f0a000d;
-        public static final int result=0x7f0a0007;
-        public static final int returnButton=0x7f0a000a;
+        public static final int pixelScoreTextView=0x7f0a0008;
+        public static final int ratioScoreTextView=0x7f0a0007;
+        public static final int refImage=0x7f0a000b;
+        public static final int rejectButton=0x7f0a0011;
+        public static final int result=0x7f0a000a;
+        public static final int resutlTextView=0x7f0a0006;
         public static final int timerTextView=0x7f0a0001;
-        public static final int userImage=0x7f0a0009;
+        public static final int userImage=0x7f0a000c;
     }
     public static final class integer {
         public static final int large_size=0x7f060002;

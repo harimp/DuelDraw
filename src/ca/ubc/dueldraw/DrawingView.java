@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 public class DrawingView extends View {
 	private int numColumns, numRows;
@@ -16,7 +17,7 @@ public class DrawingView extends View {
 	private Paint whitePaint = new Paint();
 	private boolean[][] cellChecked;
 	private boolean verbose = false;
-	
+
 	public boolean[][] getCellChecked() {
 		return cellChecked;
 	}
@@ -140,11 +141,11 @@ public class DrawingView extends View {
 		int column = (int) (event.getX() / cellWidth);
 		int row = (int) (event.getY() / cellHeight);
 
-		if(verbose){
+		if (verbose) {
 			Log.i("X", Integer.toString(column));
 			Log.i("Y", Integer.toString(row));
 		}
-		
+
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			// drawPath.moveTo(touchX, touchY);
@@ -168,5 +169,16 @@ public class DrawingView extends View {
 		}
 
 		return true;
+	}
+	
+	public void setCroppedGrid(boolean[][] grid, int size) {
+		boolean[][] centeredGrid = new boolean[numColumns][numColumns];
+		for (int y = 0; y < size; y++) {
+			for (int x = 0; x < size; x++) {
+				centeredGrid[y][x] = grid[y][x];
+			}
+		}
+		setCellChecked(centeredGrid);
+		Log.i("RESIZED IMAGE is:", Integer.toString(size) + " by " + Integer.toString(size) );
 	}
 }

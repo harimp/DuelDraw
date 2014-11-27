@@ -3,88 +3,96 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50sp"
-        android:layout_marginTop="70sp" >
-
-        <TextView
-            android:id="@+id/incomingChallengeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/gameresult"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+	<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="50sp"
+    android:layout_marginTop="70sp">
+	    <TextView
+	        android:id="@+id/resutlTextView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/gameresult"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50sp" >
-
-        <TextView
-            android:id="@+id/result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/blank"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+   	    <TextView
+	        android:id="@+id/ratioScoreTextView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+   	    <TextView
+	        android:id="@+id/pixelScoreTextView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+   	    <TextView
+	        android:id="@+id/finalScoreTextView"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="50sp">
+	    <TextView
+	        android:id="@+id/result"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/blank"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" />
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50sp" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"
-            android:gravity="center"
-            android:text="@string/origImg"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".50"
-            android:gravity="center"
-            android:text="@string/usrImg"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    
+    <LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="50sp">
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:text="Original Image"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" 
+	              	android:layout_weight=".50"/>
+	    <TextView
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:text="Your Image"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceLarge" 
+	              	android:layout_weight=".50"/>
     </LinearLayout>
-
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/refImage"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight=".50"
-            android:scaleType="fitCenter" />
-
-        <ImageView
-            android:id="@+id/userImage"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight=".50"
-            android:scaleType="fitCenter" />
+    android:layout_width="match_parent" 
+    android:layout_height="wrap_content">
+	    <ImageView
+	        android:id="@+id/refImage"
+	      	android:layout_width="0dp"
+	      	android:layout_height="100dp"
+	      	android:scaleType="fitCenter" 
+	      	android:layout_weight=".50"/>
+	    <ImageView
+	        android:id="@+id/userImage"
+	      	android:layout_width="0dp"
+	      	android:layout_height="100dp"
+	      	android:scaleType="fitCenter" 
+	      	android:layout_weight=".50"/>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="50sp">
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="80sp" >
+        android:layout_weight="0.5"
+        android:onClick="backToMainMenu"
+        android:text="@string/backToMainMenu" />
 
-        <Button
-            android:id="@+id/returnButton"
-            android:layout_width="275dp"
-            android:layout_height="wrap_content"
-            android:background="@xml/round_buttons"
-            android:onClick="backToMainMenu"
-            android:text="@string/backToMainMenu" />
-
-    </LinearLayout>
-
+</LinearLayout>
 </LinearLayout>
