@@ -62,8 +62,8 @@
 
     <ca.ubc.dueldraw.DrawingView
         android:id="@+id/pixelGridView1"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
