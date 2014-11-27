@@ -220,8 +220,9 @@ public class DrawActivity extends Activity {
 						resultIntent.putExtra("singlePlayer", true);
 						startActivity(resultIntent);
 					}else{
-						app = (SocketApp) getApplicationContext();
-						app.sendMessage("K" + Integer.toString(finalScore));
+						SocketApp app = (SocketApp) getApplicationContext();
+						app.sendMessage("K" + Double.toString(finalScore));
+				}
 				}
 			}.start();
 		}

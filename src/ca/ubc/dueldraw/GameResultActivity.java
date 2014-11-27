@@ -18,7 +18,7 @@ public class GameResultActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		SocketApp app = (SocketApp) getApplicationContext();
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -33,9 +33,9 @@ public class GameResultActivity extends Activity {
 		if(!isSinglePlayer){
 		TextView result = (TextView) findViewById(R.id.result);
 			if(app.userWon){
-				tv.setText("You won champ!");
+				result.setText("You won champ!");
 			}else{
-				tv.setText("You have lost. Better luck next time!");
+				result.setText("You have lost. Better luck next time!");
 			}
 		}
 		ImageView refImage = (ImageView) findViewById(R.id.refImage); 
