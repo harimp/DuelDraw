@@ -210,12 +210,11 @@ public class DrawActivity extends Activity {
 					
 					// open the results activity
 					Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
-					resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					resultIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+					resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 					resultIntent.putExtra("Ratio Score", ratioScore);
 					resultIntent.putExtra("Pixel Score", pixelScore);
 					resultIntent.putExtra("Final Score", finalScore);
-					getApplicationContext().startActivity(resultIntent);
+					startActivity(resultIntent);
 				}
 			}.start();
 		}

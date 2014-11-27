@@ -12,14 +12,14 @@ public class ImageData {
 
 	// distance measurements from center
 	private int center;
-	private double left = 0;
-	private double right = 0;
-	private double up = 0;
-	private double down = 0;
-	private double SW = 0;
-	private double NW = 0;
-	private double NE = 0;
-	private double SE = 0;
+	private double left;
+	private double right;
+	private double up;
+	private double down;
+	private double SW;
+	private double NW;
+	private double NE;
+	private double SE;
 
 	private boolean VERBOSE = true;
 
@@ -120,7 +120,7 @@ public class ImageData {
 				break;
 			}
 		}
-		right = (size % 2 == 0) ? i : i - 1; // add 1 if size is even
+		right = (size % 2 == 0) ? i+1 : i; // add 1 if size is even
 		if (VERBOSE) {
 			Log.i("Right = ", Double.toString(right));
 		}
@@ -133,7 +133,7 @@ public class ImageData {
 				break;
 			}
 		}
-		left = i - 1;
+		left = i;
 		if (VERBOSE) {
 			Log.i("Left = ", Double.toString(left));
 		}
@@ -146,7 +146,7 @@ public class ImageData {
 				break;
 			}
 		}
-		up = i - 1;
+		up = i;
 		if (VERBOSE) {
 			Log.i("Up = ", Double.toString(up));
 		}
@@ -159,7 +159,7 @@ public class ImageData {
 				break;
 			}
 		}
-		down = (size % 2 == 0) ? i : i - 1; // add 1 if size is even
+		down = (size % 2 == 0) ? i+1 : i; // add 1 if size is even
 		if (VERBOSE) {
 			Log.i("Down = ", Double.toString(down));
 		}
@@ -172,7 +172,7 @@ public class ImageData {
 				break;
 			}
 		}
-		SW = (size % 2 == 0) ? i : i - 1; // add 1 if size is even
+		SW = (size % 2 == 0) ? i+1 : i; // add 1 if size is even
 		if (VERBOSE) {
 			Log.i("SW = ", Double.toString(SW));
 		}
@@ -185,7 +185,7 @@ public class ImageData {
 				break;
 			}
 		}
-		NE = (size % 2 == 0) ? i : i-1; // add 1 if size is even
+		NE = (size % 2 == 0) ? i+1 : i; // add 1 if size is even
 		if (VERBOSE) {
 			Log.i("NE = ", Double.toString(NE));
 		}
@@ -199,7 +199,7 @@ public class ImageData {
 				break;
 			}
 		}
-		NW = i - 1;
+		NW = i;
 		if (VERBOSE) {
 			Log.i("NW = ", Double.toString(NW));
 		}
@@ -212,7 +212,7 @@ public class ImageData {
 				break;
 			}
 		}
-		SE = (size % 2 == 0) ? i : i - 1; // add 1 if size is even
+		SE = (size % 2 == 0) ? i+1 : i; // add 1 if size is even
 		if (VERBOSE) {
 			Log.i("SE = ", Double.toString(SE));
 		}

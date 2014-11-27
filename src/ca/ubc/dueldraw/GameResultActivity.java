@@ -40,9 +40,7 @@ public class GameResultActivity extends Activity {
 	}
 
 	public void backToMainMenu(View view) {
-		Intent backIntent = new Intent(getApplicationContext(), ImagesListActivity.class);
-		backIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		backIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-		getApplicationContext().startActivity(backIntent);
+		Intent backIntent = new Intent(getApplicationContext(), MenuActivity.class);
+		startActivity(backIntent);
 	}
 }

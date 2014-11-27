@@ -26,8 +26,9 @@ public class MenuActivity extends Activity {
 		startActivity(intent);
 	}
 	
-	public void viewLeaderboard(View view) {
-		Toast.makeText(getApplicationContext(), "This isn't implemented yet." , Toast.LENGTH_SHORT).show();
+	public void viewImagesList(View view) {
+		Intent intent = new Intent(this, ImagesListActivity.class);
+		startActivity(intent);
 	}
 
 	/*

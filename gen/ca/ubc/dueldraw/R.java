@@ -91,6 +91,8 @@ public final class R {
         public static final int menu=0x7f090003;
     }
     public static final class string {
+        public static final int MultiplayerMode=0x7f070016;
+        public static final int SinglePlayerMode=0x7f070015;
         public static final int accept=0x7f07000e;
         public static final int action_settings=0x7f070002;
         public static final int active_players=0x7f07000a;

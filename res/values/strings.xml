@@ -22,5 +22,7 @@
     <string name="backToMainMenu">Back To Main Menu</string>
     <string name="usrImg">Your Image</string>
     <string name="origImg">Original Image</string>
+    <string name="SinglePlayerMode">Single Player Mode</string>
+    <string name="MultiplayerMode">Multiplayer Mode</string>
 
 </resources>

@@ -11,18 +11,22 @@
 
     <Button
         android:layout_width="fill_parent"
-		android:layout_marginLeft="10dip"
-		android:layout_marginRight="10dip"
-	    android:layout_height="wrap_content"
-	    android:text="@string/active_players"
-	    android:onClick="viewActivePlayers" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="40dp"
+        android:background="@xml/round_buttons"
+        android:onClick="viewActivePlayers"
+        android:text="@string/MultiplayerMode" />
     
     <Button
         android:layout_width="fill_parent"
-		android:layout_marginLeft="10dip"
-		android:layout_marginRight="10dip"
-	    android:layout_height="wrap_content"
-	    android:text="@string/leaderboard"
-	    android:onClick="viewLeaderboard" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="40dp"
+        android:background="@xml/round_buttons"
+        android:onClick="viewImagesList"
+        android:text="@string/SinglePlayerMode" />
 
 </LinearLayout>
