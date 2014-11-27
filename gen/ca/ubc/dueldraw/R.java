@@ -43,23 +43,23 @@ public final class R {
         public static final int squares=0x7f02000d;
     }
     public static final class id {
+        public static final int acceptButton=0x7f0a000c;
         public static final int action_settings=0x7f0a0010;
-        public static final int button1=0x7f0a000b;
-        public static final int button2=0x7f0a000d;
-        public static final int clearButton=0x7f0a0005;
-        public static final int connect_button=0x7f0a0001;
-        public static final int drawButton=0x7f0a0003;
-        public static final int eraseButton=0x7f0a0004;
+        public static final int clearButton=0x7f0a0004;
+        public static final int drawButton=0x7f0a0002;
+        public static final int eraseButton=0x7f0a0003;
         public static final int imageView1=0x7f0a000e;
         public static final int imageView2=0x7f0a000f;
-        public static final int incomingChallengeTextView=0x7f0a0007;
+        public static final int incomingChallengeTextView=0x7f0a0006;
         public static final int list=0x7f0a0000;
-        public static final int opponentID=0x7f0a000c;
-        public static final int pixelGridView1=0x7f0a0006;
-        public static final int refImage=0x7f0a0009;
-        public static final int result=0x7f0a0008;
-        public static final int timerTextView=0x7f0a0002;
-        public static final int userImage=0x7f0a000a;
+        public static final int opponentID=0x7f0a000b;
+        public static final int pixelGridView1=0x7f0a0005;
+        public static final int refImage=0x7f0a0008;
+        public static final int rejectButton=0x7f0a000d;
+        public static final int result=0x7f0a0007;
+        public static final int returnButton=0x7f0a000a;
+        public static final int timerTextView=0x7f0a0001;
+        public static final int userImage=0x7f0a0009;
     }
     public static final class integer {
         public static final int large_size=0x7f060002;
@@ -68,12 +68,11 @@ public final class R {
     }
     public static final class layout {
         public static final int activity_active_players=0x7f030000;
-        public static final int activity_connect=0x7f030001;
-        public static final int activity_draw=0x7f030002;
-        public static final int activity_game_result=0x7f030003;
-        public static final int activity_incoming_challenge=0x7f030004;
-        public static final int activity_menu=0x7f030005;
-        public static final int activity_splash=0x7f030006;
+        public static final int activity_draw=0x7f030001;
+        public static final int activity_game_result=0x7f030002;
+        public static final int activity_incoming_challenge=0x7f030003;
+        public static final int activity_menu=0x7f030004;
+        public static final int activity_splash=0x7f030005;
     }
     public static final class menu {
         public static final int active_players=0x7f090000;
@@ -97,10 +96,12 @@ public final class R {
         public static final int hello_world=0x7f070001;
         public static final int leaderboard=0x7f07000b;
         public static final int logo=0x7f070009;
+        public static final int origImg=0x7f070014;
         public static final int placeholder=0x7f070010;
         public static final int reject=0x7f07000f;
         public static final int start=0x7f070006;
         public static final int start_new=0x7f070003;
+        public static final int usrImg=0x7f070013;
     }
     public static final class style {
         /** 
