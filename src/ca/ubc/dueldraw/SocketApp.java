@@ -238,7 +238,6 @@ public class SocketApp extends Application {
 						if(verbose) Toast.makeText(getApplicationContext(), "RefImageID = "+ refImageID,
 								Toast.LENGTH_SHORT).show();
 						Intent drawIntent = new Intent(getApplicationContext(), DrawActivity.class);
-						drawIntent.putExtra("refImage", refImageID);
 						drawIntent.putExtra("singlePlayer", false);
 						drawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						drawIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
