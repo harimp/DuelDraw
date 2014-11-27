@@ -238,6 +238,7 @@ public class SocketApp extends Application {
 						if(verbose) Toast.makeText(getApplicationContext(), "RefImageID = "+ refImageID,
 								Toast.LENGTH_SHORT).show();
 						Intent drawIntent = new Intent(getApplicationContext(), DrawActivity.class);
+						drawIntent.putExtra("singlePlayer", false);
 						drawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						drawIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 						getApplicationContext().startActivity(drawIntent);
@@ -247,6 +248,7 @@ public class SocketApp extends Application {
 						Toast.LENGTH_SHORT).show();
 						if(Character.getNumericValue(str.charAt(1)) == 1) userWon = true;
 						Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
+						resultIntent.putExtra("singlePlayer", false);
 						resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						resultIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 						getApplicationContext().startActivity(resultIntent);

@@ -32,6 +32,7 @@ public class DrawActivity extends Activity {
 	private boolean TESTING = false;
 	private int backpress = 0;
 	private boolean verbose = true;
+	private boolean isSinglePlayer = false;
 
 	private ImageData refImage;
 	private ImageData drawnImage;
@@ -50,6 +51,7 @@ public class DrawActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_draw);
 		createPixelGrid(20, 20);
+		isSinglePlayer = getIntent().getExtras().getBoolean("singlePlayer");
 		initializeRefImages();
 		timerRunning = false;
 		refTimerRunning = false;
@@ -208,13 +210,18 @@ public class DrawActivity extends Activity {
 					timerRunning = false;
 					refTimerRunning = false;
 					
-					// open the results activity
-					Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
-					resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-					resultIntent.putExtra("Ratio Score", ratioScore);
-					resultIntent.putExtra("Pixel Score", pixelScore);
-					resultIntent.putExtra("Final Score", finalScore);
-					startActivity(resultIntent);
+					if(isSinglePlayer){
+						// open the results activity
+						Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
+						resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+						resultIntent.putExtra("Ratio Score", ratioScore);
+						resultIntent.putExtra("Pixel Score", pixelScore);
+						resultIntent.putExtra("Final Score", finalScore);
+						resultIntent.putExtra("singlePlayer", true);
+						startActivity(resultIntent);
+					}else{
+						app = (SocketApp) getApplicationContext();
+						app.sendMessage("K" + Integer.toString(finalScore));
 				}
 			}.start();
 		}

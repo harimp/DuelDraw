@@ -43,6 +43,7 @@ public class ImagesListActivity extends Activity {
 						refImageID = i;
 				}
 				myIntent.putExtra("refImage", refImageID);
+				myIntent.putExtra("singlePlayer", true);
 				myIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
 				startActivity(myIntent);
