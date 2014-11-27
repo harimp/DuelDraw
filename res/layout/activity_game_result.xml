@@ -76,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.5"
         android:onClick="backToMainMenu"
+        android:background="@xml/round_buttons"
         android:text="@string/backToMainMenu" />
 
 </LinearLayout>

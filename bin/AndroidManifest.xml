@@ -14,17 +14,12 @@
     <application
         android:name=".SocketApp"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_action_name"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme" android:logo="@drawable/dueldrawtext">
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".MenuActivity"
@@ -45,6 +40,11 @@
             android:name=".DrawActivity"
             android:label="@string/logo"
             android:screenOrientation="portrait" >
+                        <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
                 <activity
             android:name=".GameResultActivity"

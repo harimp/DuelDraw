@@ -14,7 +14,7 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
-		<item name="android:icon">@drawable/ic_launcher</item>
+		<item name="android:icon">@drawable/ic_action_name</item>
 <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
