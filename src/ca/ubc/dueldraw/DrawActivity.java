@@ -31,7 +31,7 @@ public class DrawActivity extends Activity {
 	private ArrayList<List<Object>> refImagesList;
 	private boolean TESTING = false;
 	private int backpress = 0;
-	private boolean verbose = true;
+	private boolean verbose = false;
 	private boolean isSinglePlayer = false;
 
 	private ImageData refImage;
@@ -43,6 +43,9 @@ public class DrawActivity extends Activity {
 	private int timeLimit = 10000; // drawing time limit in milliseconds
 	private int refTimeLimit = 5000; // reference image display time limit in
 
+	private double ratioScoreWeight = 0.75;
+	private double pixelScoreWeight = 0.25;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -250,7 +253,7 @@ public class DrawActivity extends Activity {
 		pixelScore = getPixelScore(refImageData, scaledDrawnImageData);
 		ratioScore = getRatioScore();
 		
-		finalScore = pixelScore*0.6 + ratioScore*0.4;
+		finalScore = pixelScore*pixelScoreWeight + ratioScore*ratioScoreWeight;
 		
 		Log.i("OverallScore",Double.toString(finalScore));
 		
