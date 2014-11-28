@@ -239,14 +239,20 @@ public class SocketApp extends Application {
 						Toast.LENGTH_SHORT).show();
 						startGame = true;
 						refImageID = Character.getNumericValue(str.charAt(1));
-						if(verbose) Toast.makeText(getApplicationContext(), "RefImageID = "+ refImageID,
-								Toast.LENGTH_SHORT).show();
-						Intent drawIntent = new Intent(getApplicationContext(), DrawActivity.class);
-						drawIntent.putExtra("refImage", refImageID);
-						drawIntent.putExtra("singlePlayer", false);
-						drawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-						drawIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
-						getApplicationContext().startActivity(drawIntent);
+						if(refImageID <= 5 && refImageID >= 0) {
+							if(verbose) Toast.makeText(getApplicationContext(), "RefImageID = "+ refImageID,
+									Toast.LENGTH_SHORT).show();
+							Intent drawIntent = new Intent(getApplicationContext(), DrawActivity.class);
+							drawIntent.putExtra("refImage", refImageID);
+							drawIntent.putExtra("singlePlayer", false);
+							drawIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							drawIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+							getApplicationContext().startActivity(drawIntent);
+						}
+						else {
+							 Toast.makeText(getApplicationContext(), "RefImageID = "+ refImageID +" is Invalid",
+										Toast.LENGTH_SHORT).show();
+						}
 						break;
 						
 				case 'L': if(verbose) Toast.makeText(getApplicationContext(), "Protocol: You won? = " + str.charAt(1),
