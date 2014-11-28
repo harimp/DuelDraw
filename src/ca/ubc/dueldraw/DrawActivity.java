@@ -345,8 +345,8 @@ public class DrawActivity extends Activity {
 				}
 			}
 		}
-		double score = (matchingCellCount - (incorrect * penalty))
-				/ refCheckedCells;
+		//double score = ((matchingCellCount) - (incorrect * penalty))/refCheckedCells;
+		double score = (matchingCellCount)/refCheckedCells - (incorrect * penalty);
 		if (TESTING) {
 			Log.i("MATCHING:", Double.toString(matchingCellCount));
 			Log.i("INCORRECT:", Double.toString(incorrect));

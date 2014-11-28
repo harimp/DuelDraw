@@ -28,7 +28,7 @@ public class ImageData {
 		this.isOutline = isOutline;
 		crop();
 		if (size <= 2) {
-			this.isOutline = false;
+			return; //no points for 1 pixel
 		}
 		center = size / 2;
 
@@ -38,6 +38,11 @@ public class ImageData {
 			Log.i("isOutline", Boolean.toString(this.isOutline));
 		}
 		measureDistances();
+		if(isOutline && croppedPixelData[center][center]) {
+			if(left == 1 && right == 1 && up == 1 && down == 1) {
+				zeroValues();
+			}
+		}
 
 		if (VERBOSE) {
 			Log.i("Left/Right = ", Double.toString(leftRightRatio()));
@@ -46,6 +51,17 @@ public class ImageData {
 			Log.i("NW/SE = ", Double.toString(NWSERatio()));
 			Log.i("Height/Width = ", Double.toString(heightWidthRatio()));
 		}
+	}
+	
+	private void zeroValues() {
+		left = 0;
+		right = 0;
+		up = 0;
+		down = 0;
+		SW = 0;
+		NW = 0;
+		NE = 0;
+		SE = 0;
 	}
 
 	public boolean[][] getPixelData() {
