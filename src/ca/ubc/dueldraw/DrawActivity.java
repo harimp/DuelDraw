@@ -214,14 +214,17 @@ public class DrawActivity extends Activity {
 						// open the results activity
 						Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
 						resultIntent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-						resultIntent.putExtra("Ratio Score", ratioScore);
-						resultIntent.putExtra("Pixel Score", pixelScore);
-						resultIntent.putExtra("Final Score", finalScore);
+						resultIntent.putExtra("Ratio Score", (int) ratioScore);
+						resultIntent.putExtra("Pixel Score", (int) pixelScore);
+						resultIntent.putExtra("Final Score", (int) finalScore);
 						resultIntent.putExtra("singlePlayer", true);
 						startActivity(resultIntent);
 					}else{
 						SocketApp app = (SocketApp) getApplicationContext();
-						app.sendMessage("K" + Double.toString(finalScore));
+						app.ratioScore = (int) ratioScore;
+						app.pixelScore = (int) pixelScore;
+						app.finalScore = (int) finalScore;
+						app.sendMessage("K" + Double.toString(app.finalScore));
 				}
 				}
 			}.start();

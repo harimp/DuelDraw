@@ -25,11 +25,11 @@ public class GameResultActivity extends Activity {
 		setContentView(R.layout.activity_game_result);
 		boolean isSinglePlayer = getIntent().getExtras().getBoolean("singlePlayer");
 		TextView rs = (TextView) findViewById(R.id.ratioScoreTextView);
-		rs.setText("Ratio Score = "+ Double.toString(getIntent().getDoubleExtra("Ratio Score",-1)));
+		rs.setText("Ratio Score = "+ Integer.toString(getIntent().getIntExtra("Ratio Score",-1)));
 		TextView ps = (TextView) findViewById(R.id.pixelScoreTextView);
-		ps.setText("Pixel Score = "+ Double.toString(getIntent().getDoubleExtra("Pixel Score",-1)));
+		ps.setText("Pixel Score = "+ Integer.toString(getIntent().getIntExtra("Pixel Score",-1)));
 		TextView fs = (TextView) findViewById(R.id.finalScoreTextView);
-		fs.setText("Final Score = "+ Double.toString(getIntent().getDoubleExtra("Final Score",-1)));
+		fs.setText("Final Score = "+ Integer.toString(getIntent().getIntExtra("Final Score",-1)));
 		if(!isSinglePlayer){
 		TextView result = (TextView) findViewById(R.id.result);
 			if(app.userWon){

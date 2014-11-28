@@ -36,6 +36,10 @@ public class SocketApp extends Application {
 	boolean startGame = false;
 	int refImageID;
 	
+	int ratioScore;
+	int pixelScore;
+	int finalScore;
+	
 	String opponentID;
 
 	public void onCreate() {
@@ -250,6 +254,9 @@ public class SocketApp extends Application {
 						if(Character.getNumericValue(str.charAt(1)) == 1) userWon = true;
 						Intent resultIntent = new Intent(getApplicationContext(), GameResultActivity.class);
 						resultIntent.putExtra("singlePlayer", false);
+						resultIntent.putExtra("Ratio Score", ratioScore);
+						resultIntent.putExtra("Pixel Score", pixelScore);
+						resultIntent.putExtra("Final Score", finalScore);
 						resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						resultIntent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
 						getApplicationContext().startActivity(resultIntent);
